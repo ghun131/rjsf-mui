@@ -32,8 +32,13 @@ const uiSchema = {
   classNames: 'custom-css-class',
 }
 
-const MyMuiForm = () => {
-  return <Form schema={schema} uiSchema={uiSchema} />
+const OverviewForm = () => {
+  return (
+    <div>
+      <h3>Edit Overview Section</h3>
+      <Form schema={schema} uiSchema={uiSchema} />
+    </div>
+  )
 }
 
-export default MyMuiForm
+export default OverviewForm

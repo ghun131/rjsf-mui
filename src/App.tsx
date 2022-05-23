@@ -1,11 +1,12 @@
 import './App.css'
 import DefaultForm from './components/DefaultForm'
 import MyMuiForm from './components/MyMuiForm'
+import OverviewForm from './components/OverviewForm'
 
 const App = (): JSX.Element => {
   return (
     <div className='App'>
-      <div style={{ marginBottom: '5rem' }}>
+      {/* <div style={{ marginBottom: '5rem' }}>
         <h1>Default Form</h1>
         <DefaultForm />
       </div>
@@ -13,7 +14,9 @@ const App = (): JSX.Element => {
       <div style={{ marginBottom: '2rem' }}>
         <h1>MUI Form</h1>
         <MyMuiForm />
-      </div>
+      </div> */}
+
+      <OverviewForm />
     </div>
   )
 }
