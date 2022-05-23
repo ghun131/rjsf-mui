@@ -1,26 +1,21 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import './App.css'
+import DefaultForm from './components/DefaultForm'
+import MyMuiForm from './components/MyMuiForm'
 
-function App() {
+const App = (): JSX.Element => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='App'>
+      <div style={{ marginBottom: '5rem' }}>
+        <h1>Default Form</h1>
+        <DefaultForm />
+      </div>
+
+      <div style={{ marginBottom: '2rem' }}>
+        <h1>MUI Form</h1>
+        <MyMuiForm />
+      </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
