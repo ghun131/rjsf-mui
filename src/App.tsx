@@ -1,4 +1,4 @@
-import './App.css'
+import './App.scss'
 import DefaultForm from './components/DefaultForm'
 import MyMuiForm from './components/MyMuiForm'
 import OverviewForm from './components/OverviewForm'
