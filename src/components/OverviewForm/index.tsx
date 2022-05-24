@@ -1,5 +1,5 @@
 import { JSONSchema7 } from 'node_modules/@types/json-schema'
-import { AjvError, UiSchema, withTheme } from '@rjsf/core'
+import { AjvError, ISubmitEvent, UiSchema, withTheme } from '@rjsf/core'
 import { Theme } from '@rjsf/material-ui/v5'
 import { capitalizeFirstLetter } from 'src/util'
 import './style.scss'
@@ -97,6 +97,7 @@ const uiSchema: UiSchema = {
     // 'ui:title': 'Title here',
     // 'ui:description': '(earthian year)',
   },
+  overviewNavHeading: {},
 
   age: {
     'ui:widget': 'updown',
@@ -138,6 +139,14 @@ const OverviewForm = (): JSX.Element => {
     })
   }
 
+  const onSubmit = (
+    e: ISubmitEvent<any>,
+    nativeEvent: React.FormEvent<HTMLFormElement>
+  ): void => {
+    console.log('SUBMITTED')
+    console.log(e.formData)
+  }
+
   return (
     <div className='overview-form'>
       <Form
@@ -145,6 +154,7 @@ const OverviewForm = (): JSX.Element => {
         uiSchema={uiSchema}
         transformErrors={transformErrors}
         className='custom-form'
+        onSubmit={onSubmit}
       />
     </div>
   )
