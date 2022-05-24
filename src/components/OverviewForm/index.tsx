@@ -73,20 +73,25 @@ const OverviewForm = (
     if (columns === 4) {
       return 3
     }
-    // Default one colum
+    // Default: 1 column
     return 12
   }
 
   const ObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
+    const { title, description, properties, uiSchema } = props
+
     return (
       <div>
+        <p>{title}</p>
+        <p>{description}</p>
         <Grid container spacing={spacing}>
-          {props.title}
-          {props.description}
-          {props.properties.map((element) => {
+          {properties.map(({ content, name }) => {
+            const fieldSchema = uiSchema[name] ?? {}
+            const cols = fieldSchema['ui:column'] ?? 12
+
             return (
-              <Grid item xs={getColumns()}>
-                <div className='property-wrapper'>{element.content}</div>
+              <Grid item xs={cols}>
+                <div className='property-wrapper'>{content}</div>
               </Grid>
             )
           })}

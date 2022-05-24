@@ -57,10 +57,14 @@ export const uiSchema: UiSchema = {
     'ui:autofocus': true,
     'ui:emptyValue': '',
     'ui:autocomplete': 'overview-heading',
+    'ui:column': 6, // Custom property
     // 'ui:title': 'Title here',
     // 'ui:description': '(earthian year)',
   },
-  overviewNavHeading: {},
+
+  overviewNavHeading: {
+    'ui:column': 6,
+  },
 
   age: {
     'ui:widget': 'updown',
