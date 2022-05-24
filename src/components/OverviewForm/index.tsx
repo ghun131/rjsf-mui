@@ -78,7 +78,8 @@ const OverviewForm = (
   }
 
   const ObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
-    const { title, description, properties, uiSchema } = props
+    const { title, description, properties, uiSchema, schema } = props
+    console.log(props)
 
     return (
       <div>
@@ -86,12 +87,20 @@ const OverviewForm = (
         <p>{description}</p>
         <Grid container spacing={spacing}>
           {properties.map(({ content, name }) => {
-            const fieldSchema = uiSchema[name] ?? {}
-            const cols = fieldSchema['ui:column'] ?? 12
+            const fieldUiSchema = uiSchema[name] ?? {}
+            const fieldSchema: any = (schema.properties ?? {})[name] ?? {}
+            const cols = fieldUiSchema['ui:column'] ?? 12
+            const isFile = fieldSchema.items?.format === 'data-url'
+            const { title } = fieldSchema
+
+            console.log(fieldSchema)
 
             return (
-              <Grid item xs={cols}>
-                <div className='property-wrapper'>{content}</div>
+              <Grid key={name} item xs={cols}>
+                <>
+                  {isFile && <p>{title}</p>}
+                  <div className='property-wrapper'>{content}</div>
+                </>
               </Grid>
             )
           })}

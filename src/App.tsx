@@ -40,7 +40,7 @@ export const schema: JSONSchema7 = {
       default: '',
       required: ['hello'],
     },
-    bannerIamges: {
+    bannerImages: {
       type: 'array',
       title: 'Banner Images',
       items: {
@@ -76,7 +76,7 @@ export const uiSchema: UiSchema = {
     'ui:widget': 'textarea',
   },
 
-  bannerIamges: {
+  bannerImages: {
     'ui:options': {
       accept: '.png, .jpg',
     },
