@@ -31,7 +31,13 @@ interface IOverviewFormProps {
 const OverviewForm = (
   props: React.PropsWithChildren<IOverviewFormProps>
 ): JSX.Element => {
-  const { columns, spacing = 0, submitButtonText = 'Submit' } = props
+  const {
+    columns,
+    spacing = 0,
+    submitButtonText = 'Submit',
+    hide,
+    children,
+  } = props
 
   const transformErrors = (errors: AjvError[]): AjvError[] => {
     return errors.map((error) => {
@@ -91,13 +97,17 @@ const OverviewForm = (
 
   return (
     <div className='overview-form'>
-      {!props.hide && (
-        <Form {...props} ObjectFieldTemplate={ObjectFieldTemplate}>
-          {props.children && <div className={''}>{props.children}</div>}
-          {!props.children && (
+      {!hide && (
+        <Form
+          {...props}
+          ObjectFieldTemplate={ObjectFieldTemplate}
+          transformErrors={transformErrors}
+        >
+          {children && <div className={''}>{children}</div>}
+          {!children && (
             <div className={''}>
               <Button
-                type={'submit'}
+                type='submit'
                 disabled={props.disabled}
                 variant='contained'
                 color='primary'
