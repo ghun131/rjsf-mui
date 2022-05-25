@@ -3,9 +3,12 @@ import { AjvError, ISubmitEvent, UiSchema, withTheme } from "@rjsf/core";
 import { Theme } from "@rjsf/material-ui/v5";
 import { capitalizeFirstLetter } from "src/util";
 import "./style.scss";
-import "froala-editor/css/froala_style.min.css";
+// import "froala-editor/css/froala_style.min.css";
 import "froala-editor/css/froala_editor.pkgd.min.css";
 import FroalaEditorComponent from "react-froala-wysiwyg";
+import "froala-editor/js/plugins/align.min.js";
+import "froala-editor/js/plugins/code_view.min.js";
+
 const Form = withTheme(Theme);
 
 const samepleSchema: JSONSchema7 = {
@@ -122,7 +125,6 @@ const uiSchema: UiSchema = {
     "ui:title": "Title here",
   },
   textEditor: {
-
     "ui:widget": "myWidget",
   },
 };
