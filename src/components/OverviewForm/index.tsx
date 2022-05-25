@@ -94,7 +94,10 @@ const OverviewForm = (
             const fieldSchema: any = (schema.properties ?? {})[name] ?? {}
             const cols = fieldUiSchema['ui:column'] ?? 12
             const isFile = fieldSchema.items?.format === 'data-url'
+            const isAutocomplete = fieldSchema.items?.format === 'autocomplete'
             const { title } = fieldSchema
+
+            console.log({ isAutocomplete })
 
             if (isFile) {
               const maxFiles = fieldSchema.maxLength
@@ -104,6 +107,20 @@ const OverviewForm = (
                   <>
                     <p>{title}</p>
                     <ImageUploader maxFiles={maxFiles} />
+                  </>
+                </Grid>
+              )
+            }
+            if (isAutocomplete) {
+              const maxTags = fieldSchema.maxLength
+
+              return (
+                <Grid key={name} item xs={cols}>
+                  <>
+                    <AutocompleteTags
+                      options={toolList}
+                      inputLabel='Tools logo'
+                    />
                   </>
                 </Grid>
               )
@@ -146,7 +163,7 @@ const OverviewForm = (
       )}
 
       <div style={{ height: '3rem' }}></div>
-      <AutocompleteTags options={toolList} inputLabel='Tools logo' />
+      {/* <AutocompleteTags options={toolList} inputLabel='Tools logo' /> */}
       {/* <ImageUploader /> */}
     </div>
   )

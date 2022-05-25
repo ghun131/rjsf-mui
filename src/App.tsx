@@ -49,6 +49,15 @@ export const schema: JSONSchema7 = {
       },
       maxLength: 2,
     },
+    toolsLogo: {
+      type: 'array',
+      title: 'Tools logo',
+      items: {
+        type: 'array',
+        format: 'autocomplete',
+      },
+      maxLength: 10,
+    },
   },
 }
 
