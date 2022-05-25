@@ -122,14 +122,15 @@ const uiSchema: UiSchema = {
     "ui:title": "Title here",
   },
   textEditor: {
-    "ui:widget": "textarea",
+
+    "ui:widget": "myWidget",
   },
 };
 const customTextArea = (props: any) => {
   return <FroalaEditorComponent tag="textarea" />;
 };
 const widgets = {
-  TextareaWidget: customTextArea,
+  myWidget: customTextArea,
 };
 
 const OverviewForm = (): JSX.Element => {
