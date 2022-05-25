@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { DropEvent, FileRejection, useDropzone } from 'react-dropzone'
+import { Accept, DropEvent, FileRejection, useDropzone } from 'react-dropzone'
 
 type CSSProperties = Record<string, string | number>
 
@@ -34,13 +34,26 @@ const img: CSSProperties = {
   height: '100%',
 }
 
-const Preview = (props: any): JSX.Element => {
-  const [files, setFiles] = useState([])
-  const { getRootProps, getInputProps } = useDropzone({
-    accept: {
+interface IImageUploaderProps {
+  maxFiles?: number
+  accept?: Accept
+  textPlaceholder?: string
+}
+
+const ImageUploader = (props: IImageUploaderProps): JSX.Element => {
+  const {
+    maxFiles = 1,
+    accept = {
       'image/*': [],
     },
-    maxFiles: 5,
+    textPlaceholder = 'Drop files here',
+    // textPlaceholder = 'Drag and drop some files here, or click to select files',
+  } = props
+
+  const [files, setFiles] = useState([])
+  const { getRootProps, getInputProps } = useDropzone({
+    accept,
+    maxFiles,
     onDrop: (acceptedFiles: any) => {
       setFiles(
         acceptedFiles.map((file: any) =>
@@ -79,11 +92,11 @@ const Preview = (props: any): JSX.Element => {
     <section className='container'>
       <div {...getRootProps({ className: 'dropzone' })}>
         <input {...getInputProps()} />
-        <p>Drag 'n' drop some files here, or click to select files</p>
+        <p>{textPlaceholder}</p>
       </div>
       <aside style={thumbsContainer}>{thumbs}</aside>
     </section>
   )
 }
 
-export default Preview
+export default ImageUploader

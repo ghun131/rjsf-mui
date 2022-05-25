@@ -47,6 +47,7 @@ export const schema: JSONSchema7 = {
         type: 'string',
         format: 'data-url',
       },
+      maxLength: 2,
     },
   },
 }
@@ -58,8 +59,6 @@ export const uiSchema: UiSchema = {
     'ui:emptyValue': '',
     'ui:autocomplete': 'overview-heading',
     'ui:column': 6, // Custom property
-    // 'ui:title': 'Title here',
-    // 'ui:description': '(earthian year)',
   },
 
   overviewNavHeading: {

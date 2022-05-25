@@ -10,7 +10,7 @@ import { Theme } from '@rjsf/material-ui/v5'
 import { JSONSchema7 } from 'node_modules/@types/json-schema'
 import { capitalizeFirstLetter } from 'src/util'
 import MyDropzone from '../MyDropzone'
-import Preview from '../Preview'
+import ImageUploader from '../ImageUploader'
 import './style.scss'
 
 const Form = withTheme(Theme)
@@ -95,14 +95,22 @@ const OverviewForm = (
             const isFile = fieldSchema.items?.format === 'data-url'
             const { title } = fieldSchema
 
-            console.log(fieldSchema)
+            if (isFile) {
+              const maxFiles = fieldSchema.maxLength
+
+              return (
+                <Grid key={name} item xs={cols}>
+                  <>
+                    <p>{title}</p>
+                    <ImageUploader maxFiles={maxFiles} />
+                  </>
+                </Grid>
+              )
+            }
 
             return (
               <Grid key={name} item xs={cols}>
-                <>
-                  {isFile && <p>{title}</p>}
-                  <div className='property-wrapper'>{content}</div>
-                </>
+                <div className='property-wrapper'>{content}</div>
               </Grid>
             )
           })}
@@ -119,9 +127,10 @@ const OverviewForm = (
           ObjectFieldTemplate={ObjectFieldTemplate}
           transformErrors={transformErrors}
         >
-          {children && <div className={''}>{children}</div>}
+          {children && <div>{children}</div>}
+
           {!children && (
-            <div className={''}>
+            <div>
               <Button
                 type='submit'
                 disabled={props.disabled}
@@ -135,8 +144,8 @@ const OverviewForm = (
         </Form>
       )}
 
-      <div style={{ height: '3rem' }}></div>
-      <Preview />
+      {/* <div style={{ height: '3rem' }}></div> */}
+      {/* <ImageUploader /> */}
     </div>
   )
 
