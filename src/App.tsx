@@ -2,6 +2,9 @@ import './App.scss'
 import DefaultForm from './components/DefaultForm'
 import MyMuiForm from './components/MyMuiForm'
 import OverviewForm from './components/OverviewForm'
+import "froala-editor/css/froala_style.min.css";
+import "froala-editor/css/froala_editor.pkgd.min.css";
+import FroalaEditorComponent from "react-froala-wysiwyg";
 
 const App = (): JSX.Element => {
   return (
@@ -17,6 +20,7 @@ const App = (): JSX.Element => {
       </div> */}
 
       <OverviewForm />
+      <FroalaEditorComponent tag="textarea" />
     </div>
   )
 }
