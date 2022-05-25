@@ -1,102 +1,102 @@
-import { JSONSchema7 } from "node_modules/@types/json-schema";
-import { AjvError, ISubmitEvent, UiSchema, withTheme } from "@rjsf/core";
-import { Theme } from "@rjsf/material-ui/v5";
-import { capitalizeFirstLetter } from "src/util";
-import "./style.scss";
-import "froala-editor/css/froala_style.min.css";
-import "froala-editor/css/froala_editor.pkgd.min.css";
-import FroalaEditorComponent from "react-froala-wysiwyg";
-const Form = withTheme(Theme);
+import { JSONSchema7 } from 'node_modules/@types/json-schema'
+import { AjvError, ISubmitEvent, UiSchema, withTheme } from '@rjsf/core'
+import { Theme } from '@rjsf/material-ui/v5'
+import { capitalizeFirstLetter } from 'src/util'
+import './style.scss'
+import 'froala-editor/css/froala_style.min.css'
+import 'froala-editor/css/froala_editor.pkgd.min.css'
+import FroalaEditorComponent from 'react-froala-wysiwyg'
+const Form = withTheme(Theme)
 
 const samepleSchema: JSONSchema7 = {
-  title: "Edit Overview Section",
+  title: 'Edit Overview Section',
   //   description: 'A simple form example.',
-  type: "object",
-  required: ["firstName", "lastName"],
+  type: 'object',
+  required: ['firstName', 'lastName'],
   properties: {
     firstName: {
-      type: "string",
-      title: "First name",
-      default: "Chuck",
+      type: 'string',
+      title: 'First name',
+      default: 'Chuck',
     },
     lastName: {
-      type: "string",
-      title: "Last name",
+      type: 'string',
+      title: 'Last name',
     },
     telephone: {
-      type: "string",
-      title: "Telephone",
+      type: 'string',
+      title: 'Telephone',
       minLength: 10,
     },
   },
-};
+}
 
 //   required: ['firstName', 'lastName'],
 //   description: 'A simple form example.',
 
 const schema: JSONSchema7 = {
-  title: "Edit Overview Section",
-  type: "object",
+  title: 'Edit Overview Section',
+  type: 'object',
   required: [
-    "overviewHeading",
-    "overviewNavHeading",
-    "overviewDescription",
-    "overviewMoreDescription",
+    'overviewHeading',
+    'overviewNavHeading',
+    'overviewDescription',
+    'overviewMoreDescription',
   ],
   properties: {
     overviewHeading: {
-      type: "string",
-      title: "Overview Heading",
-      default: "",
+      type: 'string',
+      title: 'Overview Heading',
+      default: '',
       minLength: 3,
       maxLength: 40,
       //   required: ['Hello'],
     },
     overviewNavHeading: {
-      type: "string",
-      title: "Overview Nav Heading",
-      default: "",
+      type: 'string',
+      title: 'Overview Nav Heading',
+      default: '',
       minLength: 3,
       maxLength: 30,
     },
     overviewDescription: {
-      type: "string",
-      title: "Overview Description",
-      default: "",
+      type: 'string',
+      title: 'Overview Description',
+      default: '',
       minLength: 120,
     },
     overviewMoreDescription: {
-      type: "string",
-      title: "Overview More Description",
-      default: "",
-      required: ["hello"],
+      type: 'string',
+      title: 'Overview More Description',
+      default: '',
+      required: ['hello'],
     },
     bannerIamges: {
-      type: "array",
-      title: "Banner Images",
+      type: 'array',
+      title: 'Banner Images',
       items: {
-        type: "string",
-        format: "data-url",
+        type: 'string',
+        format: 'data-url',
       },
     },
     textEditor: {
-      type: "string",
-      title: "Text Rich Editor",
+      type: 'string',
+      title: 'Text Rich Editor',
     },
   },
-};
+}
 
 // 'ui:help': 'Hint: Make it strong!',
 // 'ui:widget': 'password',
 // 'ui:widget': 'alt-datetime',
 
 const uiSchema: UiSchema = {
-  classNames: "custom-css-class",
+  classNames: 'custom-css-class',
   overviewHeading: {
-    "ui:autofocus": true,
-    "ui:emptyValue": "",
-    "ui:autocomplete": "overview-heading",
-    "ui:options": {
+    'ui:autofocus': true,
+    'ui:emptyValue': '',
+    'ui:autocomplete': 'overview-heading',
+    'ui:options': {
       //   rows: 2,
       //   columns: 10,
     },
@@ -106,61 +106,61 @@ const uiSchema: UiSchema = {
   overviewNavHeading: {},
 
   age: {
-    "ui:widget": "updown",
-    "ui:title": "Age of person",
-    "ui:description": "(earthian year)",
+    'ui:widget': 'updown',
+    'ui:title': 'Age of person',
+    'ui:description': '(earthian year)',
   },
 
   overviewDescription: {
-    "ui:widget": "textarea",
+    'ui:widget': 'textarea',
   },
 
   bannerIamges: {
-    "ui:options": {
-      accept: ".png, .jpg",
+    'ui:options': {
+      accept: '.png, .jpg',
     },
-    "ui:title": "Title here",
+    'ui:title': 'Title here',
   },
   textEditor: {
-    "ui:widget": "textarea",
+    'ui:widget': 'textarea',
   },
-};
+}
 const customTextArea = (props: any) => {
-  return <FroalaEditorComponent tag="textarea" />;
-};
+  return <FroalaEditorComponent tag="textarea" />
+}
 const widgets = {
   TextareaWidget: customTextArea,
-};
+}
 
 const OverviewForm = (): JSX.Element => {
   const transformErrors = (errors: AjvError[]): AjvError[] => {
     return errors.map((error) => {
-      const { property = "", name, message = "" } = error;
+      const { property = '', name, message = '' } = error
       let normalizedCamelCaseName: string = property
-        .replaceAll(".", "")
+        .replaceAll('.', '')
         .split(/(?=[A-Z])/)
-        .join(" ");
-      normalizedCamelCaseName = capitalizeFirstLetter(normalizedCamelCaseName);
+        .join(' ')
+      normalizedCamelCaseName = capitalizeFirstLetter(normalizedCamelCaseName)
 
-      if (name === "minLength" || name === "maxLength") {
-        error.message = `${normalizedCamelCaseName} ${message}`;
+      if (name === 'minLength' || name === 'maxLength') {
+        error.message = `${normalizedCamelCaseName} ${message}`
       }
 
-      if (name === "pattern") {
-        error.message = "Only digits are allowed";
+      if (name === 'pattern') {
+        error.message = 'Only digits are allowed'
       }
 
-      return error;
-    });
-  };
+      return error
+    })
+  }
 
   const onSubmit = (
     e: ISubmitEvent<any>,
     nativeEvent: React.FormEvent<HTMLFormElement>
   ): void => {
-    console.log("SUBMITTED");
-    console.log(e.formData);
-  };
+    console.log('SUBMITTED')
+    console.log(e.formData)
+  }
 
   return (
     <div className="overview-form">
@@ -173,7 +173,7 @@ const OverviewForm = (): JSX.Element => {
         onSubmit={onSubmit}
       />
     </div>
-  );
-};
+  )
+}
 
-export default OverviewForm;
+export default OverviewForm
