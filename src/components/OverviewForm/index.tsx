@@ -1,4 +1,4 @@
-import { Button, Grid } from '@mui/material'
+import { Button, Container, Grid } from '@mui/material'
 import {
   AjvError,
   ISubmitEvent,
@@ -9,6 +9,8 @@ import {
 import { Theme } from '@rjsf/material-ui/v5'
 import { JSONSchema7 } from 'node_modules/@types/json-schema'
 import { capitalizeFirstLetter } from 'src/util'
+import MyDropzone from '../MyDropzone'
+import Preview from '../Preview'
 import './style.scss'
 
 const Form = withTheme(Theme)
@@ -132,6 +134,9 @@ const OverviewForm = (
           )}
         </Form>
       )}
+
+      <div style={{ height: '3rem' }}></div>
+      <Preview />
     </div>
   )
 
