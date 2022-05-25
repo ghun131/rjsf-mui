@@ -1,4 +1,4 @@
-import { Button, Container, Grid } from '@mui/material'
+import { Button, Grid } from '@mui/material'
 import {
   AjvError,
   ISubmitEvent,
@@ -9,8 +9,9 @@ import {
 import { Theme } from '@rjsf/material-ui/v5'
 import { JSONSchema7 } from 'node_modules/@types/json-schema'
 import { capitalizeFirstLetter } from 'src/util'
-import MyDropzone from '../MyDropzone'
+import AutocompleteTags from '../AutocompleteTags'
 import ImageUploader from '../ImageUploader'
+import { toolList } from './data'
 import './style.scss'
 
 const Form = withTheme(Theme)
@@ -144,7 +145,8 @@ const OverviewForm = (
         </Form>
       )}
 
-      {/* <div style={{ height: '3rem' }}></div> */}
+      <div style={{ height: '3rem' }}></div>
+      <AutocompleteTags options={toolList} inputLabel='Tools logo' />
       {/* <ImageUploader /> */}
     </div>
   )
