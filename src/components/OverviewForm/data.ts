@@ -1,3 +1,17 @@
+export const toolList = [
+  { title: 'Linux Essentials Tools' },
+  { title: 'GIT Tools' },
+  { title: 'HTML Tools' },
+  { title: 'CSS Tools' },
+  { title: 'Javascript Tools' },
+  { title: 'React Tools' },
+  { title: 'Node JS Tools' },
+  { title: 'Express Tools' },
+  { title: 'MongoDB Tools' },
+  { title: 'Agile & Scrum Tools' },
+  { title: 'Jest Tools' },
+]
+
 export const top100Films = [
   { title: 'The Shawshank Redemption', year: 1994 },
   { title: 'The Godfather', year: 1972 },
@@ -124,18 +138,4 @@ export const top100Films = [
   { title: 'Snatch', year: 2000 },
   { title: '3 Idiots', year: 2009 },
   { title: 'Monty Python and the Holy Grail', year: 1975 },
-]
-
-export const toolList = [
-  { title: 'Linux Essentials Tools' },
-  { title: 'GIT Tools' },
-  { title: 'HTML Tools' },
-  { title: 'CSS Tools' },
-  { title: 'Javascript Tools' },
-  { title: 'React Tools' },
-  { title: 'Node JS Tools' },
-  { title: 'Express Tools' },
-  { title: 'MongoDB Tools' },
-  { title: 'Agile & Scrum Tools' },
-  { title: 'Jest Tools' },
 ]

@@ -112,15 +112,12 @@ const OverviewForm = (
               )
             }
             if (isAutocomplete) {
-              const maxTags = fieldSchema.maxLength
+              const { title = '', maxLength = 1, options = [] } = fieldSchema
 
               return (
                 <Grid key={name} item xs={cols}>
                   <>
-                    <AutocompleteTags
-                      options={toolList}
-                      inputLabel='Tools logo'
-                    />
+                    <AutocompleteTags options={options} inputLabel={title} />
                   </>
                 </Grid>
               )
@@ -148,7 +145,7 @@ const OverviewForm = (
           {children && <div>{children}</div>}
 
           {!children && (
-            <div>
+            <div style={{ marginTop: '2rem' }}>
               <Button
                 type='submit'
                 disabled={props.disabled}
@@ -161,10 +158,6 @@ const OverviewForm = (
           )}
         </Form>
       )}
-
-      <div style={{ height: '3rem' }}></div>
-      {/* <AutocompleteTags options={toolList} inputLabel='Tools logo' /> */}
-      {/* <ImageUploader /> */}
     </div>
   )
 

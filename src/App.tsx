@@ -2,8 +2,9 @@ import './App.scss'
 import OverviewForm from './components/OverviewForm'
 import { JSONSchema7 } from 'node_modules/@types/json-schema'
 import { ISubmitEvent, UiSchema } from '@rjsf/core'
+import { toolList } from './components/OverviewForm/data'
 
-export const schema: JSONSchema7 = {
+export const schema: JSONSchema7 | Record<string, any> = {
   title: 'Edit Overview Section',
   type: 'object',
   required: [
@@ -57,6 +58,7 @@ export const schema: JSONSchema7 = {
         format: 'autocomplete',
       },
       maxLength: 10,
+      options: toolList,
     },
   },
 }
