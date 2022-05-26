@@ -5,9 +5,17 @@ import { capitalizeFirstLetter } from 'src/util'
 import './style.scss'
 // import "froala-editor/css/froala_style.min.css";
 import 'froala-editor/css/froala_editor.pkgd.min.css'
-import FroalaEditorComponent from 'react-froala-wysiwyg'
+import FroalaEditor from 'react-froala-wysiwyg'
 import 'froala-editor/js/plugins/align.min.js'
 import 'froala-editor/js/plugins/code_view.min.js'
+import 'froala-editor/js/plugins/link.min.js'
+import 'froala-editor/js/plugins/font_family.min.js'
+import 'froala-editor/js/plugins/font_size.min.js'
+import 'froala-editor/js/plugins/table.min.js'
+import 'froala-editor/js/plugins/video.min.js'
+import 'froala-editor/js/plugins/image.min.js'
+import 'froala-editor/js/plugins/help.min.js'
+import 'froala-editor/js/plugins/fullscreen.min.js'
 
 const Form = withTheme(Theme)
 
@@ -129,7 +137,7 @@ const uiSchema: UiSchema = {
   },
 }
 const customTextArea = (props: any) => {
-  return <FroalaEditorComponent tag="textarea" />
+  return <FroalaEditor tag="textarea" />
 }
 const widgets = {
   myWidget: customTextArea,
