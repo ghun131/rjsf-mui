@@ -35,35 +35,69 @@ const img: CSSProperties = {
 }
 
 interface IImageUploaderProps {
-  maxFiles?: number
-  accept?: Accept
-  textPlaceholder?: string
+  // maxFiles?: number
+  // accept?: Accept
+  // textPlaceholder?: string
+
+  schema?: any
+  onChange?: any
+  value?: [string]
+}
+
+const MAX_LENGTH = 100
+
+const nameLengthValidator = (file: File): any => {
+  if (file.name.length > MAX_LENGTH) {
+    return {
+      code: 'name-too-large',
+      message: `Name is larger than ${MAX_LENGTH} characters`,
+    }
+  }
+
+  return null
 }
 
 const ImageUploader = (props: IImageUploaderProps): JSX.Element => {
+  const { onChange, value, schema } = props
   const {
-    maxFiles = 1,
+    maxLength,
     accept = {
       'image/*': [],
     },
-    textPlaceholder = 'Drop files here',
-    // textPlaceholder = 'Drag and drop some files here, or click to select files',
-  } = props
+    textPlaceholder = 'Drop or select files',
+  } = schema
 
-  const [files, setFiles] = useState([])
-  const { getRootProps, getInputProps } = useDropzone({
+  const maxFiles = maxLength ?? 1
+
+  const [files, setFiles] = useState(value ?? [])
+  const { getRootProps, getInputProps, fileRejections } = useDropzone({
     accept,
     maxFiles,
+
     onDrop: (acceptedFiles: any) => {
-      setFiles(
-        acceptedFiles.map((file: any) =>
-          Object.assign(file, {
-            preview: URL.createObjectURL(file),
-          })
-        )
+      const fileList = acceptedFiles.map((file: any) =>
+        Object.assign(file, {
+          preview: URL.createObjectURL(file),
+        })
       )
+      setFiles(fileList)
+      onChange(fileList)
     },
+    validator: nameLengthValidator,
   })
+
+  const fileRejectionItems = fileRejections.map(
+    ({ file, errors }: { file: any; errors: any }) => (
+      <li key={file.path}>
+        {file.path} - {file.size} bytes
+        <ul>
+          {errors.map((e: any) => (
+            <li key={e.code}>{e.message}</li>
+          ))}
+        </ul>
+      </li>
+    )
+  )
 
   const thumbs = files.map((file: any) => (
     <div style={thumb} key={file.name}>
@@ -93,6 +127,8 @@ const ImageUploader = (props: IImageUploaderProps): JSX.Element => {
         <p>{textPlaceholder}</p>
       </div>
       <aside style={thumbsContainer}>{thumbs}</aside>
+      {/* <h4>Rejected files</h4>
+      <ul>{fileRejectionItems}</ul> */}
     </section>
   )
 }

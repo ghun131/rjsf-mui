@@ -23,6 +23,7 @@ const HelloWidget = (props: any): JSX.Element => {
 const widgets = {
   helloWidget: HelloWidget,
   autocompleteWidget: AutocompleteTags,
+  uploadWidget: ImageUploader,
 }
 
 interface IOverviewFormProps {
@@ -92,8 +93,6 @@ const OverviewForm = (
   const ObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
     const { title, description, properties, uiSchema, schema } = props
 
-    // console.log(props)
-
     return (
       <div>
         <p>{title}</p>
@@ -103,31 +102,6 @@ const OverviewForm = (
             const fieldUiSchema = uiSchema[name] ?? {}
             const fieldSchema: any = (schema.properties ?? {})[name] ?? {}
             const cols = fieldUiSchema['ui:column'] ?? 12
-            const isFile = fieldSchema.items?.format === 'data-url'
-            const isAutocomplete = fieldSchema.items?.format === 'autocomplete'
-            const { title } = fieldSchema
-
-            if (isFile) {
-              const maxFiles = fieldSchema.maxLength
-
-              return (
-                <Grid key={name} item xs={cols}>
-                  <>
-                    <p>{title}</p>
-                    <ImageUploader maxFiles={maxFiles} />
-                  </>
-                </Grid>
-              )
-            }
-            // if (isAutocomplete) {
-            //   const { title = '', maxLength = 1, options = [] } = fieldSchema
-
-            //   return (
-            //     <Grid key={name} item xs={cols}>
-            //       <AutocompleteTags options={options} inputLabel={title} />
-            //     </Grid>
-            //   )
-            // }
 
             return (
               <Grid key={name} item xs={cols}>
@@ -145,6 +119,8 @@ const OverviewForm = (
       {!hide && (
         <Form
           {...props}
+          showErrorList
+          onError={(errs) => console.log(errs)}
           ObjectFieldTemplate={ObjectFieldTemplate}
           transformErrors={transformErrors}
           widgets={widgets}

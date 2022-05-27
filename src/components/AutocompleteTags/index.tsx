@@ -38,6 +38,9 @@ const AutocompleteTags = (props: IAutocompleteTagsProps): JSX.Element => {
     schema: { options, inputLabel },
     onChange,
   } = props
+
+  console.log(props)
+
   // const fixedOptions = [top100Films[6]]
   const fixedOptions: any[] = []
   const [value, setValue] = useState([...fixedOptions])

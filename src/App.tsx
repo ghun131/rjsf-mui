@@ -44,15 +44,20 @@ export const schema: JSONSchema7 | Record<string, any> = {
     //   required: ['hello'],
     // },
 
-    // bannerImages: {
-    //   type: 'array',
-    //   title: 'Banner Images',
-    //   items: {
-    //     type: 'string',
-    //     format: 'data-url',
-    //   },
-    //   maxLength: 2,
-    // },
+    bannerImages: {
+      type: 'array',
+      title: 'Banner Images',
+      items: {
+        type: 'object',
+        // type: 'string',
+        // format: 'data-url',
+      },
+      maxLength: 10,
+      accept: {
+        'image/*': [],
+      },
+      textPlaceholder: 'Drop files here',
+    },
 
     // toolsLogo: {
     //   type: 'array',
@@ -105,15 +110,16 @@ export const uiSchema: UiSchema = {
     'ui:widget': 'textarea',
   },
 
+  hello: {
+    'ui:widget': 'helloWidget',
+  },
+
   bannerImages: {
     'ui:options': {
       accept: '.png, .jpg',
     },
     'ui:title': 'Title here',
-  },
-
-  hello: {
-    'ui:widget': 'helloWidget',
+    'ui:widget': 'uploadWidget',
   },
 
   autocomplete: {
