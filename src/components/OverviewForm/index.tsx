@@ -3,48 +3,116 @@ import { AjvError, ISubmitEvent, UiSchema, withTheme } from '@rjsf/core'
 import { Theme } from '@rjsf/material-ui/v5'
 import { capitalizeFirstLetter } from 'src/util'
 import './style.scss'
-// import "froala-editor/css/froala_style.min.css";
+
+import 'froala-editor/css/froala_style.min.css'
 import 'froala-editor/css/froala_editor.pkgd.min.css'
+
+import 'froala-editor/js/froala_editor.pkgd.min.js'
+
+import 'froala-editor/js/plugins.pkgd.min.js'
+
 import FroalaEditor from 'react-froala-wysiwyg'
-import 'froala-editor/js/plugins/align.min.js'
-import 'froala-editor/js/plugins/code_view.min.js'
-import 'froala-editor/js/plugins/link.min.js'
-import 'froala-editor/js/plugins/font_family.min.js'
-import 'froala-editor/js/plugins/font_size.min.js'
-import 'froala-editor/js/plugins/table.min.js'
-import 'froala-editor/js/plugins/video.min.js'
-import 'froala-editor/js/plugins/image.min.js'
-import 'froala-editor/js/plugins/help.min.js'
-import 'froala-editor/js/plugins/fullscreen.min.js'
+import { useState } from 'react'
+// import 'froala-editor/js/plugins/align.min.js'
+// import 'froala-editor/js/plugins/code_view.min.js'
+// import 'froala-editor/js/plugins/link.min.js'
+// import 'froala-editor/js/plugins/font_family.min.js'
+// import 'froala-editor/js/plugins/font_size.min.js'
+// import 'froala-editor/js/plugins/table.min.js'
+// import 'froala-editor/js/plugins/video.min.js'
+// import 'froala-editor/js/plugins/image.min.js'
+// import 'froala-editor/js/plugins/help.min.js'
+// import 'froala-editor/js/plugins/fullscreen.min.js'
+// import 'froala-editor/js/plugins/char_counter.min.js'
 
 const Form = withTheme(Theme)
 
-const samepleSchema: JSONSchema7 = {
-  title: 'Edit Overview Section',
-  //   description: 'A simple form example.',
-  type: 'object',
-  required: ['firstName', 'lastName'],
-  properties: {
-    firstName: {
-      type: 'string',
-      title: 'First name',
-      default: 'Chuck',
+//   required: ['firstName', 'lastName'],
+//   description: 'A simple form example.',
+const charCountExceeded = () => {
+  console.log('acb')
+}
+const config = {
+  attribution: false,
+  charCounterMax: 120,
+  events: {
+    'charCounter.exceeded': charCountExceeded,
+  },
+  fontFamily: {
+    'Roboto,sans-serif': 'Roboto',
+    'Oswald,sans-serif': 'Oswald',
+    'Montserrat,sans-serif': 'Montserrat',
+    "'Open Sans Condensed',sans-serif": 'Open Sans Condensed',
+  },
+  toolbarButtons: {
+    moreText: {
+      buttons: [
+        'fontFamily',
+        'fontSize',
+        'paragraphFormat',
+        'bold',
+        'italic',
+        'underline',
+        'strikeThrough',
+        'subscript',
+        'superscript',
+        'textColor',
+        'backgroundColor',
+        'inlineClass',
+        'inlineStyle',
+        'clearFormatting',
+      ],
     },
-    lastName: {
-      type: 'string',
-      title: 'Last name',
+
+    moreParagraph: {
+      buttons: [
+        'alignLeft',
+        'alignCenter',
+        'formatOLSimple',
+        'alignRight',
+        'alignJustify',
+        'formatOL',
+        'formatUL',
+
+        'paragraphStyle',
+        'lineHeight',
+        'outdent',
+        'indent',
+        'quote',
+      ],
     },
-    telephone: {
-      type: 'string',
-      title: 'Telephone',
-      minLength: 10,
+    moreRich: {
+      buttons: [
+        'insertLink',
+        'insertImage',
+
+        'insertTable',
+        'emoticons',
+        'fontAwesome',
+        'specialCharacters',
+        'embedly',
+        'insertFile',
+        'insertHR',
+      ],
+    },
+    moreMisc: {
+      buttons: [
+        'undo',
+        'redo',
+        'fullscreen',
+        'insertHTML',
+        'print',
+        'getPDF',
+        'spellChecker',
+        'selectAll',
+        'html',
+        'clear',
+        'alert',
+        'help',
+      ],
     },
   },
 }
-
-//   required: ['firstName', 'lastName'],
-//   description: 'A simple form example.',
-
 const schema: JSONSchema7 = {
   title: 'Edit Overview Section',
   type: 'object',
@@ -53,6 +121,7 @@ const schema: JSONSchema7 = {
     'overviewNavHeading',
     'overviewDescription',
     'overviewMoreDescription',
+    'textEditor',
   ],
   properties: {
     overviewHeading: {
@@ -93,6 +162,7 @@ const schema: JSONSchema7 = {
     textEditor: {
       type: 'string',
       title: 'Text Rich Editor',
+      minLength: 120,
     },
   },
 }
@@ -136,11 +206,25 @@ const uiSchema: UiSchema = {
     'ui:widget': 'myWidget',
   },
 }
-const customTextArea = (props: any) => {
-  return <FroalaEditor tag="textarea" />
+const CustomTextArea = (props: any) => {
+  const [model, setModel] = useState('')
+  const [innerConfig, setInnerConfig] = useState(config)
+  const handleModelChange = (model: string) => {
+    props.onChange(model)
+    setModel(model)
+    console.log(model)
+  }
+  return (
+    <FroalaEditor
+      config={innerConfig}
+      model={model}
+      onModelChange={handleModelChange}
+      tag="textarea"
+    />
+  )
 }
 const widgets = {
-  myWidget: customTextArea,
+  myWidget: CustomTextArea,
 }
 
 const OverviewForm = (): JSX.Element => {
