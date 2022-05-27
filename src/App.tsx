@@ -14,35 +14,35 @@ export const schema: JSONSchema7 | Record<string, any> = {
     // 'overviewMoreDescription',
   ],
   properties: {
-    // overviewHeading: {
-    //   type: 'string',
-    //   title: 'Overview Heading',
-    //   default: '',
-    //   minLength: 3,
-    //   maxLength: 40,
-    // },
+    overviewHeading: {
+      type: 'string',
+      title: 'Overview Heading',
+      default: '',
+      minLength: 3,
+      maxLength: 40,
+    },
 
-    // overviewNavHeading: {
-    //   type: 'string',
-    //   title: 'Overview Nav Heading',
-    //   default: '',
-    //   minLength: 3,
-    //   maxLength: 30,
-    // },
+    overviewNavHeading: {
+      type: 'string',
+      title: 'Overview Nav Heading',
+      default: '',
+      minLength: 3,
+      maxLength: 30,
+    },
 
-    // overviewDescription: {
-    //   type: 'string',
-    //   title: 'Overview Description',
-    //   default: '',
-    //   // minLength: 120,
-    // },
+    overviewDescription: {
+      type: 'string',
+      title: 'Overview Description',
+      default: '',
+      // minLength: 120,
+    },
 
-    // overviewMoreDescription: {
-    //   type: 'string',
-    //   title: 'Overview More Description',
-    //   default: '',
-    //   required: ['hello'],
-    // },
+    overviewMoreDescription: {
+      type: 'string',
+      title: 'Overview More Description',
+      default: '',
+      required: ['hello'],
+    },
 
     bannerImages: {
       type: 'array',
@@ -59,23 +59,7 @@ export const schema: JSONSchema7 | Record<string, any> = {
       textPlaceholder: 'Drop files here',
     },
 
-    // toolsLogo: {
-    //   type: 'array',
-    //   title: 'Tools logo',
-    //   items: {
-    //     type: 'array',
-    //     format: 'autocomplete',
-    //   },
-    //   maxLength: 10,
-    //   options: toolList,
-    // },
-
-    // hello: {
-    //   type: 'string',
-    //   title: 'Hello',
-    // },
-
-    autocomplete: {
+    toolsLogo: {
       type: 'array',
       title: 'Hello',
       items: {
@@ -85,6 +69,11 @@ export const schema: JSONSchema7 | Record<string, any> = {
       inputLabel: 'Tool Logos',
     },
   },
+
+  // hello: {
+  //   type: 'string',
+  //   title: 'Hello',
+  // },
 }
 
 export const uiSchema: UiSchema = {
@@ -122,7 +111,7 @@ export const uiSchema: UiSchema = {
     'ui:widget': 'uploadWidget',
   },
 
-  autocomplete: {
+  toolsLogo: {
     'ui:widget': 'autocompleteWidget',
   },
 
@@ -137,8 +126,7 @@ const App = (): JSX.Element => {
     nativeEvent: React.FormEvent<HTMLFormElement>
   ): void => {
     // console.log(e)
-    console.log('SUBMITTED')
-    console.log(e.formData)
+    console.log('SUBMITTED', e.formData)
   }
 
   return (
