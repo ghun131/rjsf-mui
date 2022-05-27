@@ -1,5 +1,8 @@
+import { CloseCircle, EmojiHappy } from 'iconsax-react'
 import React, { useEffect, useState } from 'react'
 import { Accept, DropEvent, FileRejection, useDropzone } from 'react-dropzone'
+import { JSONSchema7Definition } from 'node_modules/@types/json-schema'
+import './style.scss'
 
 type CSSProperties = Record<string, string | number>
 
@@ -35,10 +38,6 @@ const img: CSSProperties = {
 }
 
 interface IImageUploaderProps {
-  // maxFiles?: number
-  // accept?: Accept
-  // textPlaceholder?: string
-
   schema?: any
   onChange?: any
   value?: [string]
@@ -60,19 +59,23 @@ const nameLengthValidator = (file: File): any => {
 const ImageUploader = (props: IImageUploaderProps): JSX.Element => {
   const { onChange, value, schema } = props
   const {
-    maxLength,
+    maxItems,
     accept = {
       'image/*': [],
     },
     textPlaceholder = 'Drop or select files',
+    title = '',
   } = schema
 
-  const maxFiles = maxLength ?? 1
+  const [files, setFiles] = useState<any[]>(value ?? [])
 
-  const [files, setFiles] = useState(value ?? [])
+  useEffect(() => {
+    onChange(files)
+  }, [files])
+
   const { getRootProps, getInputProps, fileRejections } = useDropzone({
     accept,
-    maxFiles,
+    // maxFiles,
 
     onDrop: (acceptedFiles: any) => {
       const fileList = acceptedFiles.map((file: any) =>
@@ -81,7 +84,6 @@ const ImageUploader = (props: IImageUploaderProps): JSX.Element => {
         })
       )
       setFiles(fileList)
-      onChange(fileList)
     },
     validator: nameLengthValidator,
   })
@@ -99,21 +101,32 @@ const ImageUploader = (props: IImageUploaderProps): JSX.Element => {
     )
   )
 
-  const thumbs = files.map((file: any) => (
-    <div style={thumb} key={file.name}>
-      <div style={thumbInner}>
-        <img
-          src={file.preview}
-          style={img}
-          // Revoke data uri after image is loaded
-          alt={file.name}
-          onLoad={() => {
-            URL.revokeObjectURL(file.preview)
-          }}
-        />
+  const removeImage = (fileName: string): void => {
+    const filteredFiles = files.filter((file) => file.name !== fileName)
+
+    setFiles(filteredFiles as any)
+  }
+
+  const renderThumbs = (): JSX.Element[] => {
+    return files.map((file: any) => (
+      <div style={thumb} key={file.name} className='thumb-container'>
+        <div className='delete-thumb-icon'>
+          <CloseCircle size='20' onClick={() => removeImage(file.name)} />
+        </div>
+        <div style={thumbInner}>
+          <img
+            src={file.preview}
+            style={img}
+            // Revoke data uri after image is loaded
+            alt={file.name}
+            onLoad={() => {
+              URL.revokeObjectURL(file.preview)
+            }}
+          />
+        </div>
       </div>
-    </div>
-  ))
+    ))
+  }
 
   useEffect(() => {
     // Make sure to revoke the data uris to avoid memory leaks, will run on unmount
@@ -122,11 +135,12 @@ const ImageUploader = (props: IImageUploaderProps): JSX.Element => {
 
   return (
     <section className='container'>
+      {title && <p>{title}</p>}
       <div {...getRootProps({ className: 'dropzone' })}>
         <input {...getInputProps()} />
         <p>{textPlaceholder}</p>
       </div>
-      <aside style={thumbsContainer}>{thumbs}</aside>
+      <aside style={thumbsContainer}>{renderThumbs()}</aside>
       {/* <h4>Rejected files</h4>
       <ul>{fileRejectionItems}</ul> */}
     </section>

@@ -53,6 +53,8 @@ const OverviewForm = (
   } = props
 
   const transformErrors = (errors: AjvError[]): AjvError[] => {
+    console.log(errors)
+
     return errors.map((error) => {
       const { property = '', name, message = '' } = error
       let normalizedCamelCaseName: string = property
@@ -61,12 +63,13 @@ const OverviewForm = (
         .join(' ')
       normalizedCamelCaseName = capitalizeFirstLetter(normalizedCamelCaseName)
 
-      if (name === 'minLength' || name === 'maxLength') {
-        error.message = `${normalizedCamelCaseName} ${message}`
-      }
-
+      // if (name === 'minLength' || name === 'maxLength') {
       if (name === 'pattern') {
         error.message = 'Only digits are allowed'
+      }
+
+      if (name) {
+        error.message = `${normalizedCamelCaseName} ${message}`
       }
 
       return error
@@ -114,6 +117,34 @@ const OverviewForm = (
     )
   }
 
+  const CustomFieldTemplate = (props: any) => {
+    const {
+      id,
+      classNames,
+      label,
+      help,
+      required,
+      description,
+      errors,
+      children,
+    } = props
+
+    console.log(props)
+
+    return (
+      <div className={classNames}>
+        <label htmlFor={id}>
+          {label}
+          {required ? '*' : null}
+        </label>
+        {description}
+        {children}
+        {errors}
+        {help}
+      </div>
+    )
+  }
+
   return (
     <div className='overview-form'>
       {!hide && (
@@ -121,6 +152,7 @@ const OverviewForm = (
           {...props}
           showErrorList
           onError={(errs) => console.log(errs)}
+          // FieldTemplate={CustomFieldTemplate}
           ObjectFieldTemplate={ObjectFieldTemplate}
           transformErrors={transformErrors}
           widgets={widgets}

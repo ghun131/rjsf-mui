@@ -1,0 +1,11 @@
+.thumb-container {
+    position: relative;
+
+    .delete-thumb-icon {
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: fit-content;
+        cursor: pointer;
+    }
+}

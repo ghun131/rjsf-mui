@@ -1,3 +1,4 @@
+import { FilterOptionsState } from '@mui/material'
 import Autocomplete, {
   AutocompleteRenderGetTagProps,
 } from '@mui/material/Autocomplete'
@@ -5,7 +6,7 @@ import Chip from '@mui/material/Chip'
 import TextField from '@mui/material/TextField'
 import { useState } from 'react'
 
-interface ITagProps {
+interface ITag {
   title: string
 }
 
@@ -16,30 +17,12 @@ interface IAutocompleteTagsProps {
   value?: [string]
 }
 
-// const AutocompleteTags2 = (props: any): JSX.Element => {
-//   const { onChange } = props
-//   const {
-//     schema: { options, inputLabel },
-//   } = props
-
-//   console.log({ options, inputLabel })
-
-//   const onInputChange = (e: any) => {
-//     const value = e.target.value
-//     onChange([value])
-//   }
-
-//   return <input type='text' onChange={onInputChange} />
-// }
-
 const AutocompleteTags = (props: IAutocompleteTagsProps): JSX.Element => {
   const {
     id = 'fixed-tags',
-    schema: { options, inputLabel },
+    schema: { options, inputLabel, required },
     onChange,
   } = props
-
-  console.log(props)
 
   // const fixedOptions = [top100Films[6]]
   const fixedOptions: any[] = []
@@ -57,7 +40,7 @@ const AutocompleteTags = (props: IAutocompleteTagsProps): JSX.Element => {
     onChange(valueList)
   }
 
-  const filterOptions = (options: any, state: any) => {
+  const filterOptions = (options: any, state: FilterOptionsState<ITag>) => {
     const input = state.inputValue
     if (!input) return options
     const filteredOptions = options.filter((option: any) => {
@@ -69,7 +52,7 @@ const AutocompleteTags = (props: IAutocompleteTagsProps): JSX.Element => {
   const renderTags = (
     tagValue: any[],
     getTagProps: AutocompleteRenderGetTagProps
-  ) =>
+  ): JSX.Element[] =>
     tagValue.map((option, index) => (
       <Chip
         label={option.title}
@@ -88,7 +71,12 @@ const AutocompleteTags = (props: IAutocompleteTagsProps): JSX.Element => {
       getOptionLabel={(option) => option.title}
       filterOptions={filterOptions}
       renderTags={renderTags}
-      renderInput={(params) => <TextField {...params} label={inputLabel} />}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={required ? inputLabel : `${inputLabel}*`}
+        />
+      )}
     />
   )
 }

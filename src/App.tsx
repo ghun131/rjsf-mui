@@ -8,10 +8,10 @@ export const schema: JSONSchema7 | Record<string, any> = {
   title: 'Edit Overview Section',
   type: 'object',
   required: [
-    // 'overviewHeading',
-    // 'overviewNavHeading',
-    // 'overviewDescription',
-    // 'overviewMoreDescription',
+    'overviewHeading',
+    'overviewNavHeading',
+    'overviewDescription',
+    'overviewMoreDescription',
   ],
   properties: {
     overviewHeading: {
@@ -34,7 +34,7 @@ export const schema: JSONSchema7 | Record<string, any> = {
       type: 'string',
       title: 'Overview Description',
       default: '',
-      // minLength: 120,
+      minLength: 10,
     },
 
     overviewMoreDescription: {
@@ -49,23 +49,21 @@ export const schema: JSONSchema7 | Record<string, any> = {
       title: 'Banner Images',
       items: {
         type: 'object',
-        // type: 'string',
-        // format: 'data-url',
       },
-      maxLength: 10,
+      maxItems: 3,
       accept: {
         'image/*': [],
       },
       textPlaceholder: 'Drop files here',
     },
 
-    toolsLogo: {
+    toolLogos: {
       type: 'array',
-      title: 'Hello',
       items: {
         type: 'object',
       },
       options: toolList,
+      maxItems: 2,
       inputLabel: 'Tool Logos',
     },
   },
@@ -99,10 +97,6 @@ export const uiSchema: UiSchema = {
     'ui:widget': 'textarea',
   },
 
-  hello: {
-    'ui:widget': 'helloWidget',
-  },
-
   bannerImages: {
     'ui:options': {
       accept: '.png, .jpg',
@@ -111,10 +105,13 @@ export const uiSchema: UiSchema = {
     'ui:widget': 'uploadWidget',
   },
 
-  toolsLogo: {
+  toolLogos: {
     'ui:widget': 'autocompleteWidget',
   },
 
+  // hello: {
+  //   'ui:widget': 'helloWidget',
+  // },
   // 'ui:help': 'Hint: Make it strong!',
   // 'ui:widget': 'password',
   // 'ui:widget': 'alt-datetime',
