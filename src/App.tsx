@@ -8,57 +8,76 @@ export const schema: JSONSchema7 | Record<string, any> = {
   title: 'Edit Overview Section',
   type: 'object',
   required: [
-    'overviewHeading',
-    'overviewNavHeading',
-    'overviewDescription',
-    'overviewMoreDescription',
+    // 'overviewHeading',
+    // 'overviewNavHeading',
+    // 'overviewDescription',
+    // 'overviewMoreDescription',
   ],
   properties: {
-    overviewHeading: {
-      type: 'string',
-      title: 'Overview Heading',
-      default: '',
-      minLength: 3,
-      maxLength: 40,
-      //   required: ['Hello'],
-    },
-    overviewNavHeading: {
-      type: 'string',
-      title: 'Overview Nav Heading',
-      default: '',
-      minLength: 3,
-      maxLength: 30,
-    },
-    overviewDescription: {
-      type: 'string',
-      title: 'Overview Description',
-      default: '',
-      minLength: 120,
-    },
-    overviewMoreDescription: {
-      type: 'string',
-      title: 'Overview More Description',
-      default: '',
-      required: ['hello'],
-    },
-    bannerImages: {
+    // overviewHeading: {
+    //   type: 'string',
+    //   title: 'Overview Heading',
+    //   default: '',
+    //   minLength: 3,
+    //   maxLength: 40,
+    // },
+
+    // overviewNavHeading: {
+    //   type: 'string',
+    //   title: 'Overview Nav Heading',
+    //   default: '',
+    //   minLength: 3,
+    //   maxLength: 30,
+    // },
+
+    // overviewDescription: {
+    //   type: 'string',
+    //   title: 'Overview Description',
+    //   default: '',
+    //   // minLength: 120,
+    // },
+
+    // overviewMoreDescription: {
+    //   type: 'string',
+    //   title: 'Overview More Description',
+    //   default: '',
+    //   required: ['hello'],
+    // },
+
+    // bannerImages: {
+    //   type: 'array',
+    //   title: 'Banner Images',
+    //   items: {
+    //     type: 'string',
+    //     format: 'data-url',
+    //   },
+    //   maxLength: 2,
+    // },
+
+    // toolsLogo: {
+    //   type: 'array',
+    //   title: 'Tools logo',
+    //   items: {
+    //     type: 'array',
+    //     format: 'autocomplete',
+    //   },
+    //   maxLength: 10,
+    //   options: toolList,
+    // },
+
+    // hello: {
+    //   type: 'string',
+    //   title: 'Hello',
+    // },
+
+    autocomplete: {
       type: 'array',
-      title: 'Banner Images',
+      title: 'Hello',
       items: {
-        type: 'string',
-        format: 'data-url',
+        type: 'object',
       },
-      maxLength: 2,
-    },
-    toolsLogo: {
-      type: 'array',
-      title: 'Tools logo',
-      items: {
-        type: 'array',
-        format: 'autocomplete',
-      },
-      maxLength: 10,
       options: toolList,
+      inputLabel: 'Tool Logos',
     },
   },
 }
@@ -92,6 +111,15 @@ export const uiSchema: UiSchema = {
     },
     'ui:title': 'Title here',
   },
+
+  hello: {
+    'ui:widget': 'helloWidget',
+  },
+
+  autocomplete: {
+    'ui:widget': 'autocompleteWidget',
+  },
+
   // 'ui:help': 'Hint: Make it strong!',
   // 'ui:widget': 'password',
   // 'ui:widget': 'alt-datetime',
@@ -102,6 +130,7 @@ const App = (): JSX.Element => {
     e: ISubmitEvent<any>,
     nativeEvent: React.FormEvent<HTMLFormElement>
   ): void => {
+    // console.log(e)
     console.log('SUBMITTED')
     console.log(e.formData)
   }

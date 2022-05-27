@@ -11,24 +11,47 @@ interface ITagProps {
 
 interface IAutocompleteTagsProps {
   id?: string
-  options: ITagProps[]
-  inputLabel: string
+  schema: any
+  onChange?: any
+  value?: [string]
 }
 
+// const AutocompleteTags2 = (props: any): JSX.Element => {
+//   const { onChange } = props
+//   const {
+//     schema: { options, inputLabel },
+//   } = props
+
+//   console.log({ options, inputLabel })
+
+//   const onInputChange = (e: any) => {
+//     const value = e.target.value
+//     onChange([value])
+//   }
+
+//   return <input type='text' onChange={onInputChange} />
+// }
+
 const AutocompleteTags = (props: IAutocompleteTagsProps): JSX.Element => {
-  const { id = 'fixed-tags', options = [], inputLabel = '' } = props
+  const {
+    id = 'fixed-tags',
+    schema: { options, inputLabel },
+    onChange,
+  } = props
   // const fixedOptions = [top100Films[6]]
   const fixedOptions: any[] = []
   const [value, setValue] = useState([...fixedOptions])
 
-  const onChange = (
+  const onValueChange = (
     event: React.SyntheticEvent<Element, Event>,
     newValue: any[]
   ) => {
-    setValue([
+    const valueList = [
       //   ...fixedOptions,
       ...newValue.filter((option) => fixedOptions.indexOf(option) === -1),
-    ])
+    ]
+    setValue(valueList)
+    onChange(valueList)
   }
 
   const filterOptions = (options: any, state: any) => {
@@ -57,12 +80,11 @@ const AutocompleteTags = (props: IAutocompleteTagsProps): JSX.Element => {
       multiple
       id={id}
       value={value}
-      onChange={onChange}
+      onChange={onValueChange}
       options={options}
       getOptionLabel={(option) => option.title}
       filterOptions={filterOptions}
       renderTags={renderTags}
-      //   style={{ width: 500 }}
       renderInput={(params) => <TextField {...params} label={inputLabel} />}
     />
   )

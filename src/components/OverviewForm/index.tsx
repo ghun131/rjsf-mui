@@ -11,10 +11,19 @@ import { JSONSchema7 } from 'node_modules/@types/json-schema'
 import { capitalizeFirstLetter } from 'src/util'
 import AutocompleteTags from '../AutocompleteTags'
 import ImageUploader from '../ImageUploader'
-import { toolList } from './data'
 import './style.scss'
 
 const Form = withTheme(Theme)
+
+const HelloWidget = (props: any): JSX.Element => {
+  console.log(props)
+  return <p>Hello widget</p>
+}
+
+const widgets = {
+  helloWidget: HelloWidget,
+  autocompleteWidget: AutocompleteTags,
+}
 
 interface IOverviewFormProps {
   schema: JSONSchema7
@@ -82,7 +91,8 @@ const OverviewForm = (
 
   const ObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
     const { title, description, properties, uiSchema, schema } = props
-    console.log(props)
+
+    // console.log(props)
 
     return (
       <div>
@@ -97,8 +107,6 @@ const OverviewForm = (
             const isAutocomplete = fieldSchema.items?.format === 'autocomplete'
             const { title } = fieldSchema
 
-            console.log({ isAutocomplete })
-
             if (isFile) {
               const maxFiles = fieldSchema.maxLength
 
@@ -111,17 +119,15 @@ const OverviewForm = (
                 </Grid>
               )
             }
-            if (isAutocomplete) {
-              const { title = '', maxLength = 1, options = [] } = fieldSchema
+            // if (isAutocomplete) {
+            //   const { title = '', maxLength = 1, options = [] } = fieldSchema
 
-              return (
-                <Grid key={name} item xs={cols}>
-                  <>
-                    <AutocompleteTags options={options} inputLabel={title} />
-                  </>
-                </Grid>
-              )
-            }
+            //   return (
+            //     <Grid key={name} item xs={cols}>
+            //       <AutocompleteTags options={options} inputLabel={title} />
+            //     </Grid>
+            //   )
+            // }
 
             return (
               <Grid key={name} item xs={cols}>
@@ -141,6 +147,7 @@ const OverviewForm = (
           {...props}
           ObjectFieldTemplate={ObjectFieldTemplate}
           transformErrors={transformErrors}
+          widgets={widgets}
         >
           {children && <div>{children}</div>}
 
