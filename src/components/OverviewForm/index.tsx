@@ -1,4 +1,4 @@
-import { gql, useQuery } from '@apollo/client'
+import { gql, useMutation, useQuery } from '@apollo/client'
 import { Button, Grid } from '@mui/material'
 import {
   AjvError,
@@ -9,11 +9,13 @@ import {
 } from '@rjsf/core'
 import { Theme } from '@rjsf/material-ui/v5'
 import { JSONSchema7 } from 'node_modules/@types/json-schema'
+import { useEffect } from 'react'
 import ReactLoading from 'react-loading'
 import { capitalizeFirstLetter } from 'src/util'
 import AutocompleteTags from '../AutocompleteTags'
 import HelloWidget from '../HelloWidget'
 import ImageUploader from '../ImageUploader'
+import { GET_ALL_OVERVIEW, CREATE_ONE_OVERVIEW } from './query-and-mutation'
 import './style.scss'
 
 const Form = withTheme(Theme)
@@ -39,20 +41,6 @@ interface IOverviewFormProps {
   ) => void
 }
 
-const ALL_OVERVIEW = gql`
-  query MyQuery {
-    overview {
-      id
-      nav_heading
-      tool_logos
-      view_more_description
-      heading
-      description
-      banner_images
-    }
-  }
-`
-
 const OverviewForm = (
   props: React.PropsWithChildren<IOverviewFormProps>
 ): JSX.Element => {
@@ -64,7 +52,29 @@ const OverviewForm = (
     children,
   } = props
   // { loading, error, data }
-  const { data, loading, error } = useQuery(ALL_OVERVIEW)
+  const {
+    data: queryData,
+    loading: queryLoading,
+    error: queryError,
+  } = useQuery(GET_ALL_OVERVIEW)
+  const [
+    createOneOverview,
+    { data: mutationData, loading: mutationLoading, error: mutationError },
+  ] = useMutation(CREATE_ONE_OVERVIEW)
+
+  useEffect(() => {
+    // setTimeout(() => {
+    //   console.log('Test mutation')
+    //   createOneOverview({
+    //     variables: {
+    //       heading: 'heading5',
+    //       nav_heading: 'asdasdas5',
+    //       description: 'desc5',
+    //       view_more_description: 'viewmore5',
+    //     },
+    //   })
+    // }, 3000)
+  }, [])
 
   const transformErrors = (errors: AjvError[]): AjvError[] => {
     console.log(errors)
@@ -159,7 +169,7 @@ const OverviewForm = (
     )
   }
 
-  if (loading) {
+  if (queryLoading) {
     return (
       <div className='loading'>
         <ReactLoading type='spin' color='blue' />
