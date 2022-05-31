@@ -1,3 +1,4 @@
+import { gql, useQuery } from '@apollo/client'
 import { Button, Grid } from '@mui/material'
 import {
   AjvError,
@@ -8,17 +9,14 @@ import {
 } from '@rjsf/core'
 import { Theme } from '@rjsf/material-ui/v5'
 import { JSONSchema7 } from 'node_modules/@types/json-schema'
+import ReactLoading from 'react-loading'
 import { capitalizeFirstLetter } from 'src/util'
 import AutocompleteTags from '../AutocompleteTags'
+import HelloWidget from '../HelloWidget'
 import ImageUploader from '../ImageUploader'
 import './style.scss'
 
 const Form = withTheme(Theme)
-
-const HelloWidget = (props: any): JSX.Element => {
-  console.log(props)
-  return <p>Hello widget</p>
-}
 
 const widgets = {
   helloWidget: HelloWidget,
@@ -41,6 +39,20 @@ interface IOverviewFormProps {
   ) => void
 }
 
+const ALL_OVERVIEW = gql`
+  query MyQuery {
+    overview {
+      id
+      nav_heading
+      tool_logos
+      view_more_description
+      heading
+      description
+      banner_images
+    }
+  }
+`
+
 const OverviewForm = (
   props: React.PropsWithChildren<IOverviewFormProps>
 ): JSX.Element => {
@@ -51,6 +63,8 @@ const OverviewForm = (
     hide,
     children,
   } = props
+  // { loading, error, data }
+  const { data, loading, error } = useQuery(ALL_OVERVIEW)
 
   const transformErrors = (errors: AjvError[]): AjvError[] => {
     console.log(errors)
@@ -141,6 +155,14 @@ const OverviewForm = (
         {children}
         {errors}
         {help}
+      </div>
+    )
+  }
+
+  if (loading) {
+    return (
+      <div className='loading'>
+        <ReactLoading type='spin' color='blue' />
       </div>
     )
   }

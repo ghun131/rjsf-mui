@@ -3,6 +3,7 @@ import OverviewForm from './components/OverviewForm'
 import { JSONSchema7 } from 'node_modules/@types/json-schema'
 import { ISubmitEvent, UiSchema } from '@rjsf/core'
 import { toolList } from './components/OverviewForm/data'
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 
 export const schema: JSONSchema7 | Record<string, any> = {
   title: 'Edit Overview Section',
@@ -117,6 +118,15 @@ export const uiSchema: UiSchema = {
   // 'ui:widget': 'alt-datetime',
 }
 
+const client = new ApolloClient({
+  uri: process.env.REACT_APP_HASURA_URL ?? 'No uri env found',
+  cache: new InMemoryCache(),
+  headers: {
+    'x-hasura-admin-secret':
+      process.env.REACT_APP_HASURA_ADMIN_SECRET ?? 'No secret env found',
+  },
+})
+
 const App = (): JSX.Element => {
   const onSubmit = (
     e: ISubmitEvent<any>,
@@ -127,24 +137,26 @@ const App = (): JSX.Element => {
   }
 
   return (
-    <div className='App'>
-      <OverviewForm
-        schema={schema}
-        hide={false}
-        spacing={3}
-        columns={2}
-        uiSchema={uiSchema}
-        onSubmit={onSubmit}
-      >
-        {/* <Button type='submit' variant='contained' color='primary'>
+    <ApolloProvider client={client}>
+      <div className='App'>
+        <OverviewForm
+          schema={schema}
+          hide={false}
+          spacing={3}
+          columns={2}
+          uiSchema={uiSchema}
+          onSubmit={onSubmit}
+        >
+          {/* <Button type='submit' variant='contained' color='primary'>
           Login
-        </Button>
-        &nbsp;
-        <Button variant='contained' color='primary'>
+          </Button>
+          &nbsp;
+          <Button variant='contained' color='primary'>
           Forgot Password
         </Button> */}
-      </OverviewForm>
-    </div>
+        </OverviewForm>
+      </div>
+    </ApolloProvider>
   )
 }
 
