@@ -15,6 +15,7 @@ interface IAutocompleteTagsProps {
   schema: any
   onChange?: any
   value?: [string]
+  disabled: boolean
 }
 
 const AutocompleteTags = (props: IAutocompleteTagsProps): JSX.Element => {
@@ -22,6 +23,7 @@ const AutocompleteTags = (props: IAutocompleteTagsProps): JSX.Element => {
     id = 'fixed-tags',
     schema: { options, inputLabel, required },
     onChange,
+    disabled,
   } = props
 
   // const fixedOptions = [top100Films[6]]
@@ -63,6 +65,7 @@ const AutocompleteTags = (props: IAutocompleteTagsProps): JSX.Element => {
 
   return (
     <Autocomplete
+      disabled={disabled}
       multiple
       id={id}
       value={value}

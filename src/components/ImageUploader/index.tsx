@@ -41,6 +41,7 @@ interface IImageUploaderProps {
   schema?: any
   onChange?: any
   value?: [string]
+  disabled: boolean
 }
 
 const MAX_LENGTH = 100
@@ -57,7 +58,7 @@ const nameLengthValidator = (file: File): any => {
 }
 
 const ImageUploader = (props: IImageUploaderProps): JSX.Element => {
-  const { onChange, value, schema } = props
+  const { onChange, value, schema, disabled } = props
   const {
     maxItems,
     accept = {
@@ -76,7 +77,7 @@ const ImageUploader = (props: IImageUploaderProps): JSX.Element => {
   const { getRootProps, getInputProps, fileRejections } = useDropzone({
     accept,
     // maxFiles,
-
+    disabled,
     onDrop: (acceptedFiles: any) => {
       const fileList = acceptedFiles.map((file: any) =>
         Object.assign(file, {

@@ -60,10 +60,6 @@ const OverviewForm = (
     loading: queryLoading,
     error: queryError,
   } = useQuery(GET_ALL_OVERVIEW)
-  const [
-    createOneOverview,
-    { data: mutationData, loading: mutationLoading, error: mutationError },
-  ] = useMutation(CREATE_ONE_OVERVIEW)
 
   useEffect(() => {
     if (!overviewData) return
@@ -98,20 +94,7 @@ const OverviewForm = (
     // }, 3000)
   }, [overviewData])
 
-  const testMutation = () => {
-    createOneOverview({
-      variables: {
-        heading: 'heading5',
-        nav_heading: 'asdasdas5',
-        description: 'desc5',
-        view_more_description: 'viewmore5',
-      },
-    })
-  }
-
   const transformErrors = (errors: AjvError[]): AjvError[] => {
-    console.log(errors)
-
     return errors.map((error) => {
       const { property = '', name, message = '' } = error
       let normalizedCamelCaseName: string = property
@@ -151,7 +134,7 @@ const OverviewForm = (
   }
 
   const ObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
-    const { title, description, properties, uiSchema, schema } = props
+    const { title, description, properties, uiSchema, schema, disabled } = props
 
     return (
       <div>
@@ -214,7 +197,7 @@ const OverviewForm = (
     <div className='overview-form'>
       {!hide && (
         <Form
-          // {...props}
+          {...props}
           schema={schema}
           uiSchema={uiSchemaProp}
           showErrorList
