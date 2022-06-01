@@ -137,7 +137,7 @@ const OverviewForm = (
     const { title, description, properties, uiSchema, schema, disabled } = props
 
     return (
-      <div>
+      <div style={{ color: disabled ? 'rgba(0,0,0,0.38)' : 'unset' }}>
         <p>{title}</p>
         <p>{description}</p>
         <Grid container spacing={spacing}>

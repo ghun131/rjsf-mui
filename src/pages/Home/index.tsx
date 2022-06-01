@@ -123,6 +123,9 @@ interface IOverview {
   bannerImages: string[]
 }
 
+const GRID_SPACING = 3
+const GRID_COLUMN: number = 2
+
 const Home = (): JSX.Element => {
   const [
     createOneOverview,
@@ -156,12 +159,11 @@ const Home = (): JSX.Element => {
       <OverviewForm
         schema={schema}
         hide={false}
-        spacing={3}
-        columns={2}
+        spacing={GRID_SPACING}
+        columns={GRID_COLUMN}
         uiSchema={uiSchema}
         onSubmit={onSubmit}
-        // disabled={loading}
-        disabled={true}
+        disabled={loading}
       />
     </>
   )
