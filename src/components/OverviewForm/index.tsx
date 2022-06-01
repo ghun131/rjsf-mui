@@ -9,7 +9,7 @@ import {
 } from '@rjsf/core'
 import { Theme } from '@rjsf/material-ui/v5'
 import { JSONSchema7 } from 'node_modules/@types/json-schema'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import ReactLoading from 'react-loading'
 import { capitalizeFirstLetter } from 'src/util'
 import AutocompleteTags from '../AutocompleteTags'
@@ -50,10 +50,13 @@ const OverviewForm = (
     submitButtonText = 'Submit',
     hide,
     children,
+    schema: schemaProp,
+    uiSchema: uiSchemaProp,
   } = props
-  // { loading, error, data }
+  const [schema, setSchema] = useState(schemaProp)
+
   const {
-    data: queryData,
+    data: overviewData,
     loading: queryLoading,
     error: queryError,
   } = useQuery(GET_ALL_OVERVIEW)
@@ -63,18 +66,48 @@ const OverviewForm = (
   ] = useMutation(CREATE_ONE_OVERVIEW)
 
   useEffect(() => {
+    if (!overviewData) return
+    const { overview: overviewList } = overviewData
+    const selectedOverview = overviewList[0]
+    const {
+      id,
+      heading,
+      nav_heading: navHeading,
+      description,
+      view_more_description: viewMoreDescription,
+      // tool_logos: toolLogos,
+      // banner_images: bannerImages,
+    } = selectedOverview
+
+    setSchema((prevSchema) => {
+      let properties = prevSchema.properties as any
+      properties.heading.default = heading
+      properties.navHeading.default = navHeading
+      properties.description.default = description
+      properties.moreDescription.default = viewMoreDescription
+      return { ...prevSchema, properties }
+    })
+
     // setTimeout(() => {
     //   console.log('Test mutation')
-    //   createOneOverview({
-    //     variables: {
-    //       heading: 'heading5',
-    //       nav_heading: 'asdasdas5',
-    //       description: 'desc5',
-    //       view_more_description: 'viewmore5',
-    //     },
+    //   setSchema((prevSchema) => {
+    //     const properties = prevSchema.properties as any
+    //     properties.overviewNavHeading.default = 'hello'
+    //     return { ...prevSchema, properties }
     //   })
     // }, 3000)
-  }, [])
+  }, [overviewData])
+
+  const testMutation = () => {
+    createOneOverview({
+      variables: {
+        heading: 'heading5',
+        nav_heading: 'asdasdas5',
+        description: 'desc5',
+        view_more_description: 'viewmore5',
+      },
+    })
+  }
 
   const transformErrors = (errors: AjvError[]): AjvError[] => {
     console.log(errors)
@@ -181,7 +214,9 @@ const OverviewForm = (
     <div className='overview-form'>
       {!hide && (
         <Form
-          {...props}
+          // {...props}
+          schema={schema}
+          uiSchema={uiSchemaProp}
           showErrorList
           onError={(errs) => console.log(errs)}
           // FieldTemplate={CustomFieldTemplate}

@@ -5,11 +5,9 @@ export const GET_ALL_OVERVIEW = gql`
     overview {
       id
       nav_heading
-      tool_logos
       view_more_description
       heading
       description
-      banner_images
     }
   }
 `

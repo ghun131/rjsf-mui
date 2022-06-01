@@ -8,37 +8,32 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 export const schema: JSONSchema7 | Record<string, any> = {
   title: 'Edit Overview Section',
   type: 'object',
-  required: [
-    'overviewHeading',
-    'overviewNavHeading',
-    'overviewDescription',
-    'overviewMoreDescription',
-  ],
+  required: ['heading', 'navHeading', 'description', 'moreDescription'],
   properties: {
-    overviewHeading: {
+    heading: {
       type: 'string',
       title: 'Overview Heading',
-      default: '',
+      // default: 'asdasdas',
       minLength: 3,
       maxLength: 40,
     },
 
-    overviewNavHeading: {
+    navHeading: {
       type: 'string',
       title: 'Overview Nav Heading',
-      default: '',
       minLength: 3,
       maxLength: 30,
+      // default: 'navHeading1',
     },
 
-    overviewDescription: {
+    description: {
       type: 'string',
       title: 'Overview Description',
       default: '',
       minLength: 10,
     },
 
-    overviewMoreDescription: {
+    moreDescription: {
       type: 'string',
       title: 'Overview More Description',
       default: '',
