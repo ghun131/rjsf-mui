@@ -1,8 +1,22 @@
 import { gql } from '@apollo/client'
 
 export const GET_ALL_OVERVIEW = gql`
-  query GetAllOverviewQuery {
+  query GetAllOverview {
     overview(order_by: { updated_at: desc }) {
+      id
+      heading
+      nav_heading
+      description
+      view_more_description
+      created_at
+      updated_at
+    }
+  }
+`
+
+export const GET_ONE_OVERVIEW = gql`
+  query GetOneOverview($id: Int!) {
+    overview_by_pk(id: $id) {
       id
       heading
       nav_heading
@@ -56,7 +70,12 @@ export const UPSERT_ONE_OVERVIEW = gql`
       }
       on_conflict: {
         constraint: overview_id_key
-        update_columns: [heading, nav_heading]
+        update_columns: [
+          heading
+          nav_heading
+          description
+          view_more_description
+        ]
       }
     ) {
       id

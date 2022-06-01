@@ -1,12 +1,10 @@
 import { useMutation } from '@apollo/client'
 import { ISubmitEvent, UiSchema } from '@rjsf/core'
 import { JSONSchema7 } from 'node_modules/@types/json-schema'
+import { useParams } from 'react-router-dom'
 import OverviewForm from 'src/components/OverviewForm'
 import { toolList } from 'src/components/OverviewForm/data'
-import {
-  CREATE_ONE_OVERVIEW,
-  UPSERT_ONE_OVERVIEW,
-} from 'src/components/OverviewForm/query-and-mutation'
+import { UPSERT_ONE_OVERVIEW } from 'src/components/OverviewForm/query-and-mutation'
 import { isObjectEmpty } from 'src/util'
 import './style.scss'
 
@@ -130,7 +128,10 @@ interface IOverview {
 const GRID_SPACING = 3
 const GRID_COLUMN: number = 2
 
-const Home = (): JSX.Element => {
+const Home = (props: any): JSX.Element => {
+  const params = useParams()
+  const idParam = params.overviewId ?? 0
+
   const [
     upsertOneOverview,
     { data: mutationData, loading, error: mutationError },
@@ -145,11 +146,11 @@ const Home = (): JSX.Element => {
       console.error('Empty form data')
       return
     }
-    const { id, heading, navHeading, description, moreDescription } = formData
+    const { heading, navHeading, description, moreDescription } = formData
 
     upsertOneOverview({
       variables: {
-        id,
+        id: idParam,
         heading,
         nav_heading: navHeading,
         description,
@@ -168,6 +169,7 @@ const Home = (): JSX.Element => {
         uiSchema={uiSchema}
         onSubmit={onSubmit}
         disabled={loading}
+        params={{ id: idParam }}
       />
     </>
   )

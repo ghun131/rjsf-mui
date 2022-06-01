@@ -1,7 +1,6 @@
-import { CloseCircle, EmojiHappy } from 'iconsax-react'
+import { CloseCircle } from 'iconsax-react'
 import React, { useEffect, useState } from 'react'
-import { Accept, DropEvent, FileRejection, useDropzone } from 'react-dropzone'
-import { JSONSchema7Definition } from 'node_modules/@types/json-schema'
+import { useDropzone } from 'react-dropzone'
 import './style.scss'
 
 type CSSProperties = Record<string, string | number>

@@ -15,7 +15,7 @@ import { capitalizeFirstLetter } from 'src/util'
 import AutocompleteTags from '../AutocompleteTags'
 import HelloWidget from '../HelloWidget'
 import ImageUploader from '../ImageUploader'
-import { GET_ALL_OVERVIEW } from './query-and-mutation'
+import { GET_ONE_OVERVIEW } from './query-and-mutation'
 import './style.scss'
 
 const Form = withTheme(Theme)
@@ -35,6 +35,7 @@ interface IOverviewFormProps {
   columns?: number
   spacing?: 0 | 6 | 4 | 3 | 1 | 2 | 5 | 7 | 8 | 9 | 10 | undefined
   disabled?: boolean
+  params: Record<string, number | string>
   onSubmit: (
     e: ISubmitEvent<any>,
     nativeEvent: React.FormEvent<HTMLFormElement>
@@ -52,19 +53,27 @@ const OverviewForm = (
     children,
     schema: schemaProp,
     uiSchema: uiSchemaProp,
+    params,
   } = props
+  const { id: idParam } = params
   const [schema, setSchema] = useState(schemaProp)
 
   const {
     data: overviewData,
     loading: queryLoading,
     error: queryError,
-  } = useQuery(GET_ALL_OVERVIEW)
+  } = useQuery(GET_ONE_OVERVIEW, {
+    variables: {
+      id: Number(idParam) ?? 0,
+    },
+  })
 
   useEffect(() => {
-    if (!overviewData) return
-    const { overview: overviewList } = overviewData
-    const selectedOverview = overviewList[0]
+    console.log(overviewData)
+    if (!overviewData || !idParam) return
+    const { overview_by_pk: selectedOverview } = overviewData
+    if (!selectedOverview) return
+
     const {
       id,
       heading,
@@ -95,7 +104,6 @@ const OverviewForm = (
         .join(' ')
       normalizedCamelCaseName = capitalizeFirstLetter(normalizedCamelCaseName)
 
-      // if (name === 'minLength' || name === 'maxLength') {
       if (name === 'pattern') {
         error.message = 'Only digits are allowed'
       }
