@@ -1,4 +1,4 @@
-import { gql, useMutation, useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 import { Button, Grid } from '@mui/material'
 import {
   AjvError,
@@ -15,7 +15,7 @@ import { capitalizeFirstLetter } from 'src/util'
 import AutocompleteTags from '../AutocompleteTags'
 import HelloWidget from '../HelloWidget'
 import ImageUploader from '../ImageUploader'
-import { GET_ALL_OVERVIEW, CREATE_ONE_OVERVIEW } from './query-and-mutation'
+import { GET_ALL_OVERVIEW } from './query-and-mutation'
 import './style.scss'
 
 const Form = withTheme(Theme)
@@ -77,21 +77,13 @@ const OverviewForm = (
 
     setSchema((prevSchema) => {
       let properties = prevSchema.properties as any
+      properties.id.default = id
       properties.heading.default = heading
       properties.navHeading.default = navHeading
       properties.description.default = description
       properties.moreDescription.default = viewMoreDescription
       return { ...prevSchema, properties }
     })
-
-    // setTimeout(() => {
-    //   console.log('Test mutation')
-    //   setSchema((prevSchema) => {
-    //     const properties = prevSchema.properties as any
-    //     properties.overviewNavHeading.default = 'hello'
-    //     return { ...prevSchema, properties }
-    //   })
-    // }, 3000)
   }, [overviewData])
 
   const transformErrors = (errors: AjvError[]): AjvError[] => {
@@ -144,7 +136,10 @@ const OverviewForm = (
           {properties.map(({ content, name }) => {
             const fieldUiSchema = uiSchema[name] ?? {}
             const fieldSchema: any = (schema.properties ?? {})[name] ?? {}
+            const { hide = false } = fieldSchema
             const cols = fieldUiSchema['ui:column'] ?? 12
+
+            if (hide) return null
 
             return (
               <Grid key={name} item xs={cols}>
@@ -225,18 +220,6 @@ const OverviewForm = (
       )}
     </div>
   )
-
-  // return (
-  //   <div className='overview-form'>
-  //     <Form
-  //       schema={schema}
-  //       uiSchema={uiSchema}
-  //       transformErrors={transformErrors}
-  //       className='custom-form'
-  //       onSubmit={onSubmit}
-  //     />
-  //   </div>
-  // )
 }
 
 export default OverviewForm

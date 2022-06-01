@@ -3,7 +3,10 @@ import { ISubmitEvent, UiSchema } from '@rjsf/core'
 import { JSONSchema7 } from 'node_modules/@types/json-schema'
 import OverviewForm from 'src/components/OverviewForm'
 import { toolList } from 'src/components/OverviewForm/data'
-import { CREATE_ONE_OVERVIEW } from 'src/components/OverviewForm/query-and-mutation'
+import {
+  CREATE_ONE_OVERVIEW,
+  UPSERT_ONE_OVERVIEW,
+} from 'src/components/OverviewForm/query-and-mutation'
 import { isObjectEmpty } from 'src/util'
 import './style.scss'
 
@@ -12,6 +15,11 @@ export const schema: JSONSchema7 | Record<string, any> = {
   type: 'object',
   required: ['heading', 'navHeading', 'description', 'moreDescription'],
   properties: {
+    id: {
+      type: 'number',
+      hide: true,
+    },
+
     heading: {
       type: 'string',
       title: 'Overview Heading',
@@ -65,23 +73,21 @@ export const schema: JSONSchema7 | Record<string, any> = {
       inputLabel: 'Tool Logos',
     },
   },
-
-  // hello: {
-  //   type: 'string',
-  //   title: 'Hello',
-  // },
 }
+
+const hidden = () => <div />
 
 export const uiSchema: UiSchema = {
   classNames: 'custom-css-class',
-  overviewHeading: {
+
+  heading: {
     'ui:autofocus': true,
     'ui:emptyValue': '',
     'ui:autocomplete': 'overview-heading',
     'ui:column': 6, // Custom property
   },
 
-  overviewNavHeading: {
+  navHeading: {
     'ui:column': 6,
   },
 
@@ -91,7 +97,7 @@ export const uiSchema: UiSchema = {
     'ui:description': '(earthian year)',
   },
 
-  overviewDescription: {
+  description: {
     'ui:widget': 'textarea',
   },
 
@@ -107,15 +113,13 @@ export const uiSchema: UiSchema = {
     'ui:widget': 'autocompleteWidget',
   },
 
-  // hello: {
-  //   'ui:widget': 'helloWidget',
-  // },
   // 'ui:help': 'Hint: Make it strong!',
   // 'ui:widget': 'password',
   // 'ui:widget': 'alt-datetime',
 }
 
 interface IOverview {
+  id: number
   heading: string
   navHeading: string
   moreDescription: string
@@ -128,9 +132,9 @@ const GRID_COLUMN: number = 2
 
 const Home = (): JSX.Element => {
   const [
-    createOneOverview,
+    upsertOneOverview,
     { data: mutationData, loading, error: mutationError },
-  ] = useMutation(CREATE_ONE_OVERVIEW)
+  ] = useMutation(UPSERT_ONE_OVERVIEW)
 
   async function onSubmit(
     e: ISubmitEvent<IOverview>,
@@ -141,11 +145,11 @@ const Home = (): JSX.Element => {
       console.error('Empty form data')
       return
     }
-    console.log(formData)
-    const { heading, navHeading, description, moreDescription } = formData
+    const { id, heading, navHeading, description, moreDescription } = formData
 
-    createOneOverview({
+    upsertOneOverview({
       variables: {
+        id,
         heading,
         nav_heading: navHeading,
         description,
