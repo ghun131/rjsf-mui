@@ -54,7 +54,7 @@ export const CREATE_ONE_OVERVIEW = gql`
 // Upsert 1 Overview
 export const UPSERT_ONE_OVERVIEW = gql`
   mutation (
-    $id: Int
+    $id: Int!
     $heading: String!
     $nav_heading: String!
     $description: String!

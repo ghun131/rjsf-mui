@@ -1,10 +1,13 @@
-import { useMutation } from '@apollo/client'
+import { OperationVariables, useMutation } from '@apollo/client'
 import { ISubmitEvent, UiSchema } from '@rjsf/core'
 import { JSONSchema7 } from 'node_modules/@types/json-schema'
 import { useParams } from 'react-router-dom'
-import OverviewForm from 'src/components/OverviewForm'
-import { toolList } from 'src/components/OverviewForm/data'
-import { UPSERT_ONE_OVERVIEW } from 'src/components/OverviewForm/query-and-mutation'
+import CustomForm from 'src/components/CustomForm'
+import { toolList } from 'src/components/CustomForm/data'
+import {
+  CREATE_ONE_OVERVIEW,
+  UPSERT_ONE_OVERVIEW,
+} from 'src/components/CustomForm/query-and-mutation'
 import { isObjectEmpty } from 'src/util'
 import './style.scss'
 
@@ -132,14 +135,15 @@ const Home = (props: any): JSX.Element => {
   const params = useParams()
   const idParam = params.overviewId ?? 0
 
-  const [
-    upsertOneOverview,
-    { data: mutationData, loading, error: mutationError },
-  ] = useMutation(UPSERT_ONE_OVERVIEW)
+  const [upsertOneOverview, { loading: upsertLoading }] =
+    useMutation(UPSERT_ONE_OVERVIEW)
+  const [insertOneOverview, { loading: insertLoading }] =
+    useMutation(CREATE_ONE_OVERVIEW)
 
   async function onSubmit(
     e: ISubmitEvent<IOverview>,
-    nativeEvent: React.FormEvent<HTMLFormElement>
+    // nativeEvent: React.FormEvent<HTMLFormElement>
+    nativeEvent: any
   ): Promise<void> {
     const { formData } = e
     if (isObjectEmpty(formData)) {
@@ -148,28 +152,40 @@ const Home = (props: any): JSX.Element => {
     }
     const { heading, navHeading, description, moreDescription } = formData
 
-    upsertOneOverview({
-      variables: {
-        id: idParam,
-        heading,
-        nav_heading: navHeading,
-        description,
-        view_more_description: moreDescription,
-      },
-    })
+    const variables: OperationVariables = {
+      heading,
+      nav_heading: navHeading,
+      description,
+      view_more_description: moreDescription,
+    }
+
+    console.log(e)
+    console.log(nativeEvent)
+
+    if (idParam) {
+      variables.id = idParam
+      upsertOneOverview({
+        variables,
+      })
+    } else {
+      insertOneOverview({
+        variables,
+      })
+    }
   }
 
   return (
     <>
-      <OverviewForm
+      <CustomForm
         schema={schema}
         hide={false}
         spacing={GRID_SPACING}
         columns={GRID_COLUMN}
         uiSchema={uiSchema}
-        onSubmit={onSubmit}
-        disabled={loading}
+        onSubmit={(e, nativeEvent) => onSubmit(e, nativeEvent)}
+        disabled={upsertLoading}
         params={{ id: idParam }}
+        submitButtonText={idParam ? 'Update' : 'Create'}
       />
     </>
   )

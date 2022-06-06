@@ -42,7 +42,7 @@ interface IOverviewFormProps {
   ) => void
 }
 
-const OverviewForm = (
+const CustomForm = (
   props: React.PropsWithChildren<IOverviewFormProps>
 ): JSX.Element => {
   const {
@@ -51,9 +51,10 @@ const OverviewForm = (
     submitButtonText = 'Submit',
     hide,
     children,
+    params,
     schema: schemaProp,
     uiSchema: uiSchemaProp,
-    params,
+    onSubmit,
   } = props
   const { id: idParam } = params
   const [schema, setSchema] = useState(schemaProp)
@@ -69,7 +70,6 @@ const OverviewForm = (
   })
 
   useEffect(() => {
-    console.log(overviewData)
     if (!overviewData || !idParam) return
     const { overview_by_pk: selectedOverview } = overviewData
     if (!selectedOverview) return
@@ -209,6 +209,7 @@ const OverviewForm = (
           ObjectFieldTemplate={ObjectFieldTemplate}
           transformErrors={transformErrors}
           widgets={widgets}
+          // onClose={() => {}}
         >
           {children && <div>{children}</div>}
 
@@ -219,6 +220,7 @@ const OverviewForm = (
                 disabled={props.disabled}
                 variant='contained'
                 color='primary'
+                // onClick={(e) => onSubmit(e)}
               >
                 {submitButtonText}
               </Button>
@@ -230,4 +232,4 @@ const OverviewForm = (
   )
 }
 
-export default OverviewForm
+export default CustomForm

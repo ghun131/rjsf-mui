@@ -1,5 +1,4 @@
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
-import { ReactNode } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import './App.scss'
 import Home from './pages/Home'
@@ -18,6 +17,7 @@ const App = (): JSX.Element => {
     <div className='App'>
       <ApolloProvider client={client}>
         <Routes>
+          <Route path='overview' element={<Home />} />
           <Route path='overview/:overviewId' element={<Home />} />
         </Routes>
       </ApolloProvider>
