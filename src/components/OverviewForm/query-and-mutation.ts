@@ -129,7 +129,7 @@ export const UPSERT_ONE_OVERVIEW = gql`
 //   }
 // }
 
-export const fieldsQueryMap = {
+export const fieldsQueryMap: Record<string, any> = {
   Oview: GET_ALL_OVERVIEW,
   Logo: TOOL_LOGOS_BY_OVERVIEW,
 };

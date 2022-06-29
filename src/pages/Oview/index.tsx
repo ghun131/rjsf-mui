@@ -4,9 +4,11 @@ import { useQuery, useApolloClient } from "@apollo/client";
 import { Button } from "@mui/material";
 import { JSONSchema7 } from "node_modules/@types/json-schema";
 import { Theme } from "@rjsf/material-ui/v5";
+import { diff } from "json-diff";
 import {
   GET_ALL_OVERVIEW,
   TOOL_LOGOS_BY_OVERVIEW,
+  fieldsQueryMap,
 } from "src/components/OverviewForm/query-and-mutation";
 
 const Form = withTheme(Theme);
@@ -19,13 +21,41 @@ function addOptionsToSelection(options: any, schema: any, fieldName: string) {
   return newSchema;
 }
 
-function Oview({ schema: gSchema }: { schema: JSONSchema7; depField: any }) {
-  const { data: overviewData, loading: queryLoading } =
-    useQuery(GET_ALL_OVERVIEW);
+function Oview({
+  schema: gSchema,
+  indieSelectField,
+}: {
+  schema: JSONSchema7;
+  depField: any;
+  indieSelectField: string[];
+}) {
   const [formData, setFormData] = useState<{ Oview?: string }>({});
   const [focus, setFocus] = useState("");
   const client = useApolloClient();
   const [schema, setSchema] = useState(gSchema);
+
+  useEffect(() => {
+    async function fetchOptionsSelection(field: string) {
+      const result = await client.query({
+        query: fieldsQueryMap[field],
+      });
+      const newSchema = addOptionsToSelection(
+        result.data.overview.map((ov: any) => ({
+          type: "string",
+          enum: [ov.id],
+          title: ov.heading,
+        })),
+        schema,
+        field
+      );
+
+      setSchema(newSchema);
+    }
+
+    for (const item of indieSelectField) {
+      fetchOptionsSelection(item);
+    }
+  }, [focus]);
 
   useEffect(() => {
     async function fetchTools(ovId: string) {
@@ -57,22 +87,8 @@ function Oview({ schema: gSchema }: { schema: JSONSchema7; depField: any }) {
     }
 
     formData.Oview && fetchTools(formData.Oview?.toString());
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formData, client]);
-
-  const loading = !overviewData && queryLoading;
-  if (loading) return <h2>Loading ...</h2>;
-  if (schema?.definitions?.Oview) {
-    addOptionsToSelection(
-      overviewData.overview.map((ov: any) => ({
-        type: "string",
-        enum: [ov.id],
-        title: ov.heading,
-      })),
-      schema,
-      "Oview"
-    );
-  }
 
   return (
     <Form

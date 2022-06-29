@@ -27,9 +27,9 @@ function fieldsWithRelationship(schema: any) {
 }
 
 function getIndieSelectField(schema: any) {
-  const fields = new Set();
+  const fields = [];
   for (const key in schema.definitions) {
-    if (!schema.definitions[key].dep) fields.add(key);
+    if (!schema.definitions[key].dep) fields.push(key);
   }
 
   return fields;
@@ -45,7 +45,14 @@ function SchemaBuilder() {
   const indieSelectField = getIndieSelectField(schema);
   console.log("~ indieSelectField", indieSelectField);
 
-  if (schemas) return <Oview schema={schema} depField={depField} />;
+  if (schemas)
+    return (
+      <Oview
+        schema={schema}
+        depField={depField}
+        indieSelectField={indieSelectField}
+      />
+    );
 
   return null;
 }

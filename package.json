@@ -55,6 +55,7 @@
     ]
   },
   "devDependencies": {
+    "@types/json-diff": "^0.7.0",
     "sass": "^1.52.1"
   }
 }
