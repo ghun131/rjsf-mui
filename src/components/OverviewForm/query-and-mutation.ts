@@ -1,4 +1,14 @@
-import { gql } from '@apollo/client'
+import { gql } from "@apollo/client";
+
+export const GET_SCHEMAS = gql`
+  query FormSchema {
+    form_schema {
+      id
+      schema
+      description
+    }
+  }
+`;
 
 export const GET_ALL_OVERVIEW = gql`
   query GetAllOverview {
@@ -12,7 +22,7 @@ export const GET_ALL_OVERVIEW = gql`
       updated_at
     }
   }
-`
+`;
 
 export const GET_ONE_OVERVIEW = gql`
   query GetOneOverview($id: Int!) {
@@ -26,7 +36,7 @@ export const GET_ONE_OVERVIEW = gql`
       updated_at
     }
   }
-`
+`;
 
 export const CREATE_ONE_OVERVIEW = gql`
   mutation (
@@ -49,7 +59,17 @@ export const CREATE_ONE_OVERVIEW = gql`
       }
     }
   }
-`
+`;
+
+export const TOOL_LOGOS_BY_OVERVIEW = gql`
+  query ToolLogosById($ov_id: String!) {
+    tool_logo(where: { overview_id: { _eq: $ov_id } }) {
+      id
+      label
+      value
+    }
+  }
+`;
 
 // Upsert 1 Overview
 export const UPSERT_ONE_OVERVIEW = gql`
@@ -83,7 +103,7 @@ export const UPSERT_ONE_OVERVIEW = gql`
       nav_heading
     }
   }
-`
+`;
 
 // Upsert many Overview
 // mutation {
@@ -108,3 +128,8 @@ export const UPSERT_ONE_OVERVIEW = gql`
 //     }
 //   }
 // }
+
+export const fieldsQueryMap = {
+  Oview: GET_ALL_OVERVIEW,
+  Logo: TOOL_LOGOS_BY_OVERVIEW,
+};

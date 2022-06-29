@@ -1,78 +1,79 @@
-import { useQuery } from '@apollo/client'
-import { Button, Grid } from '@mui/material'
+import { useLazyQuery, useQuery } from "@apollo/client";
+import { Button, Grid } from "@mui/material";
 import {
   AjvError,
   ISubmitEvent,
   ObjectFieldTemplateProps,
   UiSchema,
   withTheme,
-} from '@rjsf/core'
-import { Theme } from '@rjsf/material-ui/v5'
-import { JSONSchema7 } from 'node_modules/@types/json-schema'
-import { useEffect, useState } from 'react'
-import ReactLoading from 'react-loading'
-import { capitalizeFirstLetter } from 'src/util'
-import AutocompleteTags from '../AutocompleteTags'
-import HelloWidget from '../HelloWidget'
-import ImageUploader from '../ImageUploader'
-import { GET_ONE_OVERVIEW } from './query-and-mutation'
-import './style.scss'
+} from "@rjsf/core";
+import { Theme } from "@rjsf/material-ui/v5";
+import { JSONSchema7 } from "node_modules/@types/json-schema";
+import { useEffect, useState } from "react";
+import ReactLoading from "react-loading";
+import { capitalizeFirstLetter } from "src/util";
+import AutocompleteTags from "../AutocompleteTags";
+import HelloWidget from "../HelloWidget";
+import ImageUploader from "../ImageUploader";
+import { GET_ONE_OVERVIEW, TOOL_LOGOS_BY_OVERVIEW } from "./query-and-mutation";
+import "./style.scss";
 
-const Form = withTheme(Theme)
+const Form = withTheme(Theme);
 
 const widgets = {
   helloWidget: HelloWidget,
   autocompleteWidget: AutocompleteTags,
   uploadWidget: ImageUploader,
-}
+};
 
 interface IOverviewFormProps {
-  schema: JSONSchema7
-  uiSchema: UiSchema
-  submitButtonText?: string
-  showSuccessMessage?: boolean
-  hide?: boolean
-  columns?: number
-  spacing?: 0 | 6 | 4 | 3 | 1 | 2 | 5 | 7 | 8 | 9 | 10 | undefined
-  disabled?: boolean
-  params: Record<string, number | string>
+  schema: JSONSchema7;
+  uiSchema: UiSchema;
+  submitButtonText?: string;
+  showSuccessMessage?: boolean;
+  hide?: boolean;
+  columns?: number;
+  spacing?: 0 | 6 | 4 | 3 | 1 | 2 | 5 | 7 | 8 | 9 | 10 | undefined;
+  disabled?: boolean;
+  params: Record<string, number | string>;
   onSubmit: (
     e: ISubmitEvent<any>,
     nativeEvent: React.FormEvent<HTMLFormElement>
-  ) => void
+  ) => void;
 }
 
 const OverviewForm = (
   props: React.PropsWithChildren<IOverviewFormProps>
 ): JSX.Element => {
   const {
-    columns,
     spacing = 0,
-    submitButtonText = 'Submit',
+    submitButtonText = "Submit",
     hide,
     children,
     schema: schemaProp,
     uiSchema: uiSchemaProp,
     params,
-  } = props
-  const { id: idParam } = params
-  const [schema, setSchema] = useState(schemaProp)
+  } = props;
+  const { id: idParam } = params;
+  const [schema, setSchema] = useState(schemaProp);
+  const pathname = window.location.href;
 
-  const {
-    data: overviewData,
-    loading: queryLoading,
-    error: queryError,
-  } = useQuery(GET_ONE_OVERVIEW, {
-    variables: {
-      id: Number(idParam) ?? 0,
-    },
-  })
+  const { data: overviewData, loading: queryLoading } = useQuery(
+    GET_ONE_OVERVIEW,
+    {
+      variables: {
+        id: Number(idParam) ?? 0,
+      },
+    }
+  );
+
+  const [fetchTools, { data: toolLogos, loading: toolLogoLoading }] =
+    useLazyQuery(TOOL_LOGOS_BY_OVERVIEW);
 
   useEffect(() => {
-    console.log(overviewData)
-    if (!overviewData || !idParam) return
-    const { overview_by_pk: selectedOverview } = overviewData
-    if (!selectedOverview) return
+    if (!overviewData || !idParam) return;
+    const { overview_by_pk: selectedOverview } = overviewData;
+    if (!selectedOverview) return;
 
     const {
       id,
@@ -82,122 +83,99 @@ const OverviewForm = (
       view_more_description: viewMoreDescription,
       // tool_logos: toolLogos,
       // banner_images: bannerImages,
-    } = selectedOverview
+    } = selectedOverview;
 
     setSchema((prevSchema) => {
-      let properties = prevSchema.properties as any
-      properties.id.default = id
-      properties.heading.default = heading
-      properties.navHeading.default = navHeading
-      properties.description.default = description
-      properties.moreDescription.default = viewMoreDescription
-      return { ...prevSchema, properties }
-    })
-  }, [overviewData])
+      let properties = prevSchema.properties as any;
+      properties.id.default = id;
+      properties.heading.default = heading;
+      properties.navHeading.default = navHeading;
+      properties.description.default = description;
+      properties.moreDescription.default = viewMoreDescription;
+      return { ...prevSchema, properties };
+    });
+  }, [idParam, overviewData]);
+
+  useEffect(() => {
+    if (pathname.includes("/overview")) {
+      const ov_id = pathname.split("/overview/")[1];
+      fetchTools({ variables: { ov_id } });
+    }
+  }, [pathname]);
+
+  // useEffect(() => {
+  //   const newSchema = JSON.parse(JSON.stringify(schema));
+  //   const curLogos = toolLogos?.tool_logo.map((logo: any) => ({
+  //     title: logo.label,
+  //   }));
+  //   newSchema.properties.toolLogos.options = curLogos;
+  //   console.log("~ newSchema", newSchema);
+  //   setSchema(newSchema);
+  // }, [toolLogos]);
 
   const transformErrors = (errors: AjvError[]): AjvError[] => {
     return errors.map((error) => {
-      const { property = '', name, message = '' } = error
+      const { property = "", name, message = "" } = error;
       let normalizedCamelCaseName: string = property
-        .replaceAll('.', '')
+        .replaceAll(".", "")
         .split(/(?=[A-Z])/)
-        .join(' ')
-      normalizedCamelCaseName = capitalizeFirstLetter(normalizedCamelCaseName)
+        .join(" ");
+      normalizedCamelCaseName = capitalizeFirstLetter(normalizedCamelCaseName);
 
-      if (name === 'pattern') {
-        error.message = 'Only digits are allowed'
+      if (name === "pattern") {
+        error.message = "Only digits are allowed";
       }
 
       if (name) {
-        error.message = `${normalizedCamelCaseName} ${message}`
+        error.message = `${normalizedCamelCaseName} ${message}`;
       }
 
-      return error
-    })
-  }
-
-  const getColumns = () => {
-    if (columns === 1) {
-      return 12
-    }
-    if (columns === 2) {
-      return 6
-    }
-    if (columns === 3) {
-      return 4
-    }
-    if (columns === 4) {
-      return 3
-    }
-    // Default: 1 column
-    return 12
-  }
+      return error;
+    });
+  };
 
   const ObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
-    const { title, description, properties, uiSchema, schema, disabled } = props
+    const { title, description, properties, uiSchema, schema, disabled } =
+      props;
 
     return (
-      <div style={{ color: disabled ? 'rgba(0,0,0,0.38)' : 'unset' }}>
+      <div style={{ color: disabled ? "rgba(0,0,0,0.38)" : "unset" }}>
         <p>{title}</p>
         <p>{description}</p>
         <Grid container spacing={spacing}>
           {properties.map(({ content, name }) => {
-            const fieldUiSchema = uiSchema[name] ?? {}
-            const fieldSchema: any = (schema.properties ?? {})[name] ?? {}
-            const { hide = false } = fieldSchema
-            const cols = fieldUiSchema['ui:column'] ?? 12
+            const fieldUiSchema = uiSchema[name] ?? {};
+            const fieldSchema: any = (schema.properties ?? {})[name] ?? {};
+            const { hide = false } = fieldSchema;
+            const cols = fieldUiSchema["ui:column"] ?? 12;
 
-            if (hide) return null
+            if (hide) return null;
 
             return (
               <Grid key={name} item xs={cols}>
-                <div className='property-wrapper'>{content}</div>
+                <div className="property-wrapper">{content}</div>
               </Grid>
-            )
+            );
           })}
         </Grid>
       </div>
-    )
-  }
+    );
+  };
 
-  const CustomFieldTemplate = (props: any) => {
-    const {
-      id,
-      classNames,
-      label,
-      help,
-      required,
-      description,
-      errors,
-      children,
-    } = props
+  // function handleDataChange(dataChange: any) {
+  //   console.log(dataChange);
+  // }
 
-    console.log(props)
-
+  if (queryLoading || toolLogoLoading) {
     return (
-      <div className={classNames}>
-        <label htmlFor={id}>
-          {label}
-          {required ? '*' : null}
-        </label>
-        {description}
-        {children}
-        {errors}
-        {help}
+      <div className="loading">
+        <ReactLoading type="spin" color="blue" />
       </div>
-    )
-  }
-
-  if (queryLoading) {
-    return (
-      <div className='loading'>
-        <ReactLoading type='spin' color='blue' />
-      </div>
-    )
+    );
   }
 
   return (
-    <div className='overview-form'>
+    <div className="overview-form">
       {!hide && (
         <Form
           {...props}
@@ -209,25 +187,35 @@ const OverviewForm = (
           ObjectFieldTemplate={ObjectFieldTemplate}
           transformErrors={transformErrors}
           widgets={widgets}
+          // onChange={handleDataChange}
         >
           {children && <div>{children}</div>}
 
           {!children && (
-            <div style={{ marginTop: '2rem' }}>
+            <div style={{ marginTop: "2rem" }}>
               <Button
-                type='submit'
+                type="submit"
                 disabled={props.disabled}
-                variant='contained'
-                color='primary'
+                variant="contained"
+                color="primary"
               >
                 {submitButtonText}
+              </Button>
+              &nbsp;
+              <Button
+                type="submit"
+                disabled={props.disabled}
+                variant="contained"
+                color="error"
+              >
+                Error
               </Button>
             </div>
           )}
         </Form>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default OverviewForm
+export default OverviewForm;
